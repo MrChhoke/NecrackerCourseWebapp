@@ -1,0 +1,20 @@
+div.form{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 2rem 0;
+    width: 100%;
+    border: 3px solid rgb(0, 151, 68);
+    color: black;
+    font-size: 1.25rem;
+    background-image: radial-gradient(ellipse closest-corner at center, #31e021 0%, #58ff7c 100%);
+}
+
+form.form, label.form, input.form, select.form{
+    padding: 5px;
+    flex: 0 1 100%;
+    font-weight: bold;
+    font-size: 20px;
+    color: black;
+    background: #4add7b;
+}

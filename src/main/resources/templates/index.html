@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <title>BestShopOnline</title>
+<!--    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />-->
+    <link href="/css/style.css" th:href="@{css/style.css}" rel="stylesheet" />
+</head>
+<body>
+    <div class="header">
+        <a th:href="@{/}" class="header-link" style="margin-left: 60px">BestShopOnline!</a>
+
+        <div style="display: flex">
+            <a th:href="@{/}" class="header-link">Категорії</a>
+            <a th:href="@{/}" class="header-link">Відгуки</a>
+            <a th:href="@{/}" class="header-link">Запитання</a>
+        </div>
+
+        <div style="display: flex;">
+            <a th:href="@{/}" class="header-link">Авторизація</a>
+            <a th:href="@{/}" class="header-link">Регістрація</a>
+        </div>
+    </div>
+
+
+    <div class="container" style="margin-top: 60px">
+        <div th:each="goods : ${goodsForModal}" style="display: flex; justify-content: start">
+            <div class="itemOfGood" th:each="good : ${goods}" >
+                <div class="box">
+                    <a th:href="@{/{id}(id=${good.getId()})}"><img class="itemOfGood" th:src="*{'data:image/jpeg;base64,'+{good.nameImg}}"></a>
+                </div>
+                <div style="padding: 5px 10%">
+                    <a th:href="@{/{id}(id=${good.getId()})}"><h1 style="word-wrap: break-word; word-break: break-all " th:text="${good.getName()}"></h1></a>
+                    <h2 th:text="'Price: ' +  ${good.getPrice()} + '$'" style="color: #151715;word-wrap: break-word; word-break: break-all"></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <a th:href="@{/}" class="footer-link" style="margin-left: 60px">BestShopOnline!</a>
+        <div style="display: flex">
+            <a th:href="@{/}" class="footer-link">Відгуки</a>
+            <a th:href="@{/}" class="footer-link">Запитання</a>
+        </div>
+        <div style="display: flex;">
+            <a th:href="@{/}" class="footer-link">Адміністрація</a>
+        </div>
+    </div>
+</body>
+</html>
