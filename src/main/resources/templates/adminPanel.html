@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>AdminPanel</title>
     <link th:href="@{css/style.css}" rel="stylesheet">
+    <link th:href="@{css/product.css}" rel="stylesheet">
 </head>
 <body>
     <div class="header">
@@ -25,23 +26,38 @@
     <div class="container" style="margin-top: 60px">
 
         <div class="form" style="width: 40%">
-            <form th:method="post" th:action="@{adminpanel/create}"
-                  style="display: flex; flex-direction: column" class="form"
+            <form th:method="post" th:action="@{adminpanel}"
+                  style="display: flex; flex-direction: column" class="form" th:object="${formproduct}"
                   enctype="multipart/form-data">
-                <label class="form" for="name">Ім'я товару:</label>
-                <input class="form" name="name" style="padding: 0" type="text" id="name">
-                <label class="form" for="price">Ціна:</label>
-                <input class="form" name="price" style="padding: 0" type="text" id="price">
-                <label class="form" for="desc">Опис:</label>
-                <input class="form" name="desc" style="padding: 0" type="text" id="desc">
+                <div class="adminAddForm">
+                    <label class="form" for="name">Ім'я товару:</label>
+                    <input class="form" th:field="*{name}" style="padding: 0" type="text" id="name">
+                    <h2 th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</h2>
+                </div>
+
+                <div class="adminAddForm">
+                    <label class="form" for="price">Ціна:</label>
+                    <input class="form" th:field="*{price}" style="padding: 0" type="text" id="price">
+                    <h2 th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Name Error</h2>
+                </div>
+
+                <div class="adminAddForm">
+                    <label class="form" for="desc">Опис:</label>
+                    <input class="form" th:field="*{description}" style="padding: 0" type="text" id="desc">
+                    <h2 th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Name Error</h2>
+                </div>
+
 
                 <div class="form" style="padding-top: 10px">
+                    <label class="form" for="desc">Категорія:</label>
                     <select  th:name="category">
                         <option th:each="productCategory : ${allCategory}" th:text="${productCategory}"></option>
                     </select>
                 </div>
-                <label class="form" for="image">Фото: </label>
-                <input class="form" type="file" name="file" id="image" value="upload" accept="image/png, image/jpeg" />
+                <div class="adminAddForm">
+                    <label class="form" for="image">Фото: </label>
+                    <input class="form" type="file" name="file" id="image" value="upload" accept="image/png, image/jpeg" />
+                </div>
                 <div style="padding-top: 20px"><input style="padding: 5px 11px" type="submit" value="Добавить!"/></div>
             </form>
         </div>

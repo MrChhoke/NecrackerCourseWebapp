@@ -1,29 +1,31 @@
 package ua.bondar.course.bondarsite.controllers;
 
 
-import org.springframework.beans.factory.annotation.Value;
+
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ua.bondar.course.bondarsite.dao.DAOGoods;
 import ua.bondar.course.bondarsite.model.CategoryProduct;
 import ua.bondar.course.bondarsite.model.Product;
 
+
+import javax.validation.Valid;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
+
 
 @Controller
 public class MainShopController {
 
     private final static int COUNT_GOODS_IN_PAGE = 5;
-
-    @Value("${upload.path}")
-    private String uploadPath;
 
 
     private final DAOGoods daoGoods = new DAOGoods();
@@ -45,7 +47,7 @@ public class MainShopController {
     }
 
     @GetMapping("/adminpanel")
-    public String adminPanel(Model model){
+    public String adminPanel(@ModelAttribute("formproduct") Product product, Model model){
         List<List<Product>> goodsForModal = positionForModel();
         List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
         model.addAttribute("goodsForModal", goodsForModal);
@@ -60,16 +62,32 @@ public class MainShopController {
     }
 
 
-    @PostMapping("/adminpanel/create")
-    public String createProduct(
-                                @RequestParam("file")MultipartFile file,
-                                @RequestParam("name") String name,
-                                @RequestParam("price") double price,
-                                @RequestParam("desc") String desc,
-                                @RequestParam("category") String category
-    ) throws IOException {
-            Product product = new Product(0,name,desc, CategoryProduct.getCategoryProduct(category), price,
-                    Base64.getEncoder().encodeToString(file.getBytes()));
+    @PostMapping("/adminpanel")
+    public String createProduct(@ModelAttribute("formproduct") @Valid Product product,
+                                BindingResult bindingResult, Model model,
+                                @RequestParam(value = "file", required = false)MultipartFile file,
+                                @RequestParam(value = "category", required = false) String category) throws IOException {
+
+            if(bindingResult.hasErrors()){
+                List<List<Product>> goodsForModal = positionForModel();
+                List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
+                model.addAttribute("goodsForModal", goodsForModal);
+                model.addAttribute("allCategory", allCategory);
+                return "adminPanel";
+            }
+            if (category == null) category = CategoryProduct.getAllCategoryProductInString().get(1);
+            product.setCategory(CategoryProduct.getCategoryProduct(category));
+            product.setId(0);
+
+
+            if(file.isEmpty()){
+                File fileChange = new File("C:\\Users\\vladb\\IdeaProjects\\bondarSite\\src\\main\\resources\\static\\img\\defaulIcon.png");
+                try(FileInputStream fileInputStream = new FileInputStream(fileChange)){
+                    product.setNameImg(Base64.getEncoder().encodeToString(fileInputStream.readAllBytes()));
+                }
+            }else{
+                product.setNameImg(Base64.getEncoder().encodeToString(file.getBytes()));
+            }
             daoGoods.setProduct(product);
         return "redirect:/adminpanel";
     }

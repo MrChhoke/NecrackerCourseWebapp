@@ -1,5 +1,6 @@
 package ua.bondar.course.bondarsite.dao;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ua.bondar.course.bondarsite.model.CategoryProduct;
