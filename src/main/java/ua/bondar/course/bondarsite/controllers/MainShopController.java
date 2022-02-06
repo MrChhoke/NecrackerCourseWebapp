@@ -3,6 +3,9 @@ package ua.bondar.course.bondarsite.controllers;
 
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ua.bondar.course.bondarsite.dao.DAOGoods;
 import ua.bondar.course.bondarsite.model.CategoryProduct;
 import ua.bondar.course.bondarsite.model.Product;
+import ua.bondar.course.bondarsite.model.UserOfShop;
 
 
 import javax.validation.Valid;
@@ -28,45 +32,71 @@ public class MainShopController {
     private final static int COUNT_GOODS_IN_PAGE = 5;
 
 
-    private final DAOGoods daoGoods = new DAOGoods();
+    @Autowired
+    private DAOGoods daoGoods;
+
 
     @GetMapping("/")
-    public String index(Model model){
+    public String index(@AuthenticationPrincipal UserOfShop user, Model model){
 
         List<List<Product>> goodsForModal = positionForModel();
-
         model.addAttribute("goodsForModal", goodsForModal);
+
+        if(user != null){
+            model.addAttribute("user", user.getUsername());
+            return "index";
+        }
+        model.addAttribute("user", "anom1");
         return "index";
     }
 
     @GetMapping("/{id}")
-    public String product(Model model, @PathVariable(name = "id") int id){
+    public String product(@AuthenticationPrincipal UserOfShop user,
+                          Model model, @PathVariable(name = "id") Long id){
         List<Product> goods = daoGoods.getGoods();
         model.addAttribute("product", daoGoods.getProductById(id));
+
+        if(user != null){
+            model.addAttribute("user", user.getUsername());
+            return "product";
+        }
+        model.addAttribute("user", "anom1");
         return "product";
     }
 
+    @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
     @GetMapping("/adminpanel")
-    public String adminPanel(@ModelAttribute("formproduct") Product product, Model model){
+    public String adminPanel(@AuthenticationPrincipal UserOfShop user,
+                             @ModelAttribute("formproduct") Product product, Model model){
         List<List<Product>> goodsForModal = positionForModel();
         List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
         model.addAttribute("goodsForModal", goodsForModal);
         model.addAttribute("allCategory", allCategory);
+
+        if(user != null){
+            model.addAttribute("user", user.getUsername());
+            return "adminPanel";
+        }
+        model.addAttribute("user", "anom1");
         return "adminPanel";
     }
 
+    @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
     @DeleteMapping("/adminpanel/{id}")
-    public String deleteInAdminPanel(Model model, @PathVariable(name = "id") int id){
+    public String deleteInAdminPanel(Model model, @PathVariable(name = "id") Long id){
         daoGoods.deleteProductById(id);
         return "redirect:/adminpanel";
     }
 
-
+    @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
     @PostMapping("/adminpanel")
-    public String createProduct(@ModelAttribute("formproduct") @Valid Product product,
+    public String createProduct(@AuthenticationPrincipal UserOfShop user,
+                                @ModelAttribute("formproduct") @Valid Product product,
                                 BindingResult bindingResult, Model model,
-                                @RequestParam(value = "file", required = false)MultipartFile file,
+                                @RequestParam(value = "file", required = false) MultipartFile file,
                                 @RequestParam(value = "category", required = false) String category) throws IOException {
+
+            model.addAttribute("user", user.getUsername());
 
             if(bindingResult.hasErrors()){
                 List<List<Product>> goodsForModal = positionForModel();
@@ -77,7 +107,7 @@ public class MainShopController {
             }
             if (category == null) category = CategoryProduct.getAllCategoryProductInString().get(1);
             product.setCategory(CategoryProduct.getCategoryProduct(category));
-            product.setId(0);
+            product.setId(0L);
 
 
             if(file.isEmpty()){

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${product.getName()}">Name</title>
-    <link rel="stylesheet" th:href="@{css/style.css}">
-    <link rel="stylesheet" th:href="@{css/product.css}">
+    <link href="../static/css/style.css" rel="stylesheet" />
+    <link href="../static/css/product.css" rel="stylesheet" />
 </head>
 <body>
     <div class="header">
@@ -17,20 +17,27 @@
         </div>
 
         <div style="display: flex;">
-            <a th:href="@{/}" class="header-link">Авторизація</a>
-            <a th:href="@{/}" class="header-link">Регістрація</a>
+            <div></div>
+            <a th:if="${user == 'anom1'}" th:href="@{/login}" class="header-link">Авторизація</a>
+            <a th:if="${user == 'anom1'}" th:href="@{/registration}" class="header-link">Регістрація</a>
+            <a th:if="${user != 'anom1'}" class="header-link" th:text="${user}" th:href="@{/}"></a>
+            <form th:if="${user != 'anom1'}" th:action="@{/logout}" method="post">
+                <input type="submit" value="Sign Out"/>
+            </form>
         </div>
     </div>
 
 
     <div class="container" style="margin-top: 60px">
         <div style="display: flex; justify-content: space-between">
-            <img th:src="*{'data:image/jpeg;base64,'+{product.nameImg}}" style="width: 40%; max-height: 200px">
-            <div style="width: 55%">
-                <div th:text="${product.getName()}" style="justify-content: center; margin: 0 auto; font-size: 50px; color: black">Static content</div>
-                <div th:text="'Price: ' + ${product.getPrice()} + '$'" style="color: black; font-size: 35px;"></div>
-                <div th:text="'Category: ' + ${product.getCategory().getStringCategory()}" style="color: black; font-size: 35px;"></div>
-                <div th:text="'Description: ' +  ${product.getDescription()}" style="color: black; font-size: 20px;"></div>
+            <div style="display: flex; justify-content: center; align-items: center; flex-direction: row;">
+                <div style="margin-right: 5%"><img th:src="*{'data:image/jpeg;base64,'+{product.nameImg}}" style="height: 200px"></div>
+                <div>
+                    <div th:text="${product.getName()}" style="justify-content: center; margin: 0 auto; font-size: 50px; color: black">Static content</div>
+                    <div th:text="'Price: ' + ${product.getPrice()} + '$'" style="color: black; font-size: 35px;"></div>
+                    <div th:text="'Category: ' + ${product.getCategory().getStringCategory()}" style="color: black; font-size: 35px;"></div>
+                    <div th:text="'Description: ' +  ${product.getDescription()}" style="color: black; font-size: 20px;"></div>
+                </div>
             </div>
         </div>
     </div>

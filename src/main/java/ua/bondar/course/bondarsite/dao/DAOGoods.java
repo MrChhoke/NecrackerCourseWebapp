@@ -30,14 +30,14 @@ public class DAOGoods {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM goods");
 
             while (resultSet.next()){
-                list.add(new Product(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("description"),
-                        CategoryProduct.getCategoryProduct(resultSet.getString("category")),
-                        resultSet.getDouble("price"),
-                        resultSet.getString("urlimage")
-                ));
+                Product product = new Product();
+                product.setId(resultSet.getLong("id"));
+                product.setNameImg(resultSet.getString("urlimage"));
+                product.setName(resultSet.getString("name"));
+                product.setPrice(resultSet.getDouble("price"));
+                product.setDescription(resultSet.getString("description"));
+                product.setCategory(CategoryProduct.getCategoryProduct(resultSet.getString("category")));
+                list.add(product);
             }
             statement.close();
             resultSet.close();
@@ -47,7 +47,7 @@ public class DAOGoods {
         return list;
     }
 
-    public Product getProductById(int id){
+    public Product getProductById(Long id){
         try {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(URL,USER,PASSWORD);
@@ -56,14 +56,13 @@ public class DAOGoods {
             ResultSet resultSet = statement.executeQuery();
             Product product = null;
             while(resultSet.next()) {
-                product = new Product(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("description"),
-                        CategoryProduct.getCategoryProduct(resultSet.getString("category")),
-                        resultSet.getDouble("price"),
-                        resultSet.getString("urlimage")
-                );
+                product = new Product();
+                product.setId(resultSet.getLong("id"));
+                product.setNameImg(resultSet.getString("urlimage"));
+                product.setName(resultSet.getString("name"));
+                product.setPrice(resultSet.getDouble("price"));
+                product.setDescription(resultSet.getString("description"));
+                product.setCategory(CategoryProduct.getCategoryProduct(resultSet.getString("category")));
             }
             statement.close();
             resultSet.close();
@@ -93,12 +92,12 @@ public class DAOGoods {
         }
     }
 
-    public void deleteProductById(int id){
+    public void deleteProductById(Long id){
         try{
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(URL,USER,PASSWORD);
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM goods WHERE id=?");
-            preparedStatement.setInt(1, id);
+            preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
             preparedStatement.close();
         }catch (SQLException | ClassNotFoundException e){

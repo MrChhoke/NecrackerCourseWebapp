@@ -2,8 +2,7 @@
 <html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
     <title>BestShopOnline</title>
-<!--    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />-->
-    <link href="/css/style.css" th:href="@{css/style.css}" rel="stylesheet" />
+    <link href="../static/css/style.css" rel="stylesheet" />
 </head>
 <body>
     <div class="header">
@@ -16,21 +15,26 @@
         </div>
 
         <div style="display: flex;">
-            <a th:href="@{/}" class="header-link">Авторизація</a>
-            <a th:href="@{/}" class="header-link">Регістрація</a>
+            <div></div>
+            <a th:if="${user == 'anom1'}" th:href="@{/login}" class="header-link">Авторизація</a>
+            <a th:if="${user == 'anom1'}" th:href="@{/registration}" class="header-link">Регістрація</a>
+            <a th:if="${user != 'anom1'}" class="header-link" th:text="${user}" th:href="@{/}"></a>
+            <form th:if="${user != 'anom1'}" th:action="@{/logout}" method="post">
+                <input type="submit" value="Sign Out"/>
+            </form>
         </div>
     </div>
 
 
-    <div class="container" style="margin-top: 60px">
-        <div th:each="goods : ${goodsForModal}" style="display: flex; justify-content: start">
+    <div class="container" style="margin-top: 30px">
+        <div th:each="goods : ${goodsForModal}" style="display: flex; justify-content: start;">
             <div class="itemOfGood" th:each="good : ${goods}" >
-                <div class="box">
+                <div class="box" style=" margin-left: 5%;">
                     <a th:href="@{/{id}(id=${good.getId()})}"><img class="itemOfGood" th:src="*{'data:image/jpeg;base64,'+{good.nameImg}}"></a>
                 </div>
                 <div style="padding: 5px 10%">
-                    <a th:href="@{/{id}(id=${good.getId()})}"><h1 style="word-wrap: break-word; word-break: break-all " th:text="${good.getName()}"></h1></a>
-                    <h2 th:text="'Price: ' +  ${good.getPrice()} + '$'" style="color: #151715;word-wrap: break-word; word-break: break-all"></h2>
+                    <a th:href="@{/{id}(id=${good.getId()})}"><h1 style="word-wrap: break-word; word-break: break-all; height: 45px; text-overflow: ellipsis; overflow: hidden" th:text="${good.getName()}"></h1></a>
+                    <h2 th:text="'Price: ' +  ${good.getPrice()} + '$'" style="color: #151715;word-wrap: break-word; word-break: break-all;"></h2>
                 </div>
             </div>
         </div>

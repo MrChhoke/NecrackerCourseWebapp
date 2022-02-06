@@ -9,7 +9,6 @@ div.form{
 }
 
 form.form, label.form, input.form{
-    padding: 5px;
     flex: 0 1 50%;
     font-weight: bold;
     font-size: 15px;
@@ -27,6 +26,7 @@ select.form{
 div.adminAddForm{
     padding-top: 5px;
     display: flex;
+    flex-direction: column;
     justify-content: start;
     padding-left: 4px;
 }
