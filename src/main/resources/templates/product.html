@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
+<html lang="en" xmlns:th="http://thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title th:text="${product.getName()}">Name</title>
@@ -18,9 +18,11 @@
 
         <div style="display: flex;">
             <div></div>
+            <a th:href="@{/shoppingCart}" class="header-link">Корзина</a>
             <a th:if="${user == 'anom1'}" th:href="@{/login}" class="header-link">Авторизація</a>
             <a th:if="${user == 'anom1'}" th:href="@{/registration}" class="header-link">Регістрація</a>
             <a th:if="${user != 'anom1'}" class="header-link" th:text="${user}" th:href="@{/}"></a>
+<!--            <a sec:authorize="hasRole('ADMIN')" class="header-link" th:href="@{/adminpanel}">AdminPanel</a>-->
             <form th:if="${user != 'anom1'}" th:action="@{/logout}" method="post">
                 <input type="submit" value="Sign Out"/>
             </form>
@@ -31,12 +33,19 @@
     <div class="container" style="margin-top: 60px">
         <div style="display: flex; justify-content: space-between">
             <div style="display: flex; justify-content: center; align-items: center; flex-direction: row;">
-                <div style="margin-right: 5%"><img th:src="*{'data:image/jpeg;base64,'+{product.nameImg}}" style="height: 200px"></div>
+                <div style="padding: 0 5%"><img th:src="*{'data:image/jpeg;base64,'+{product.nameImg}}" style="height: 200px"></div>
                 <div>
                     <div th:text="${product.getName()}" style="justify-content: center; margin: 0 auto; font-size: 50px; color: black">Static content</div>
                     <div th:text="'Price: ' + ${product.getPrice()} + '$'" style="color: black; font-size: 35px;"></div>
                     <div th:text="'Category: ' + ${product.getCategory().getStringCategory()}" style="color: black; font-size: 35px;"></div>
                     <div th:text="'Description: ' +  ${product.getDescription()}" style="color: black; font-size: 20px;"></div>
+                    <form method="post" th:action="@{/addToCart/{id}(id = ${product.getId()})}" style="display: flex; justify-content: flex-end;">
+                        <div style="padding-right: 50px">
+                            <h2>Кількість:</h2>
+                            <input class="form" type="number" value="1" name="amount">
+                        </div>
+                        <input type="submit" value="Замовити" style="width: 150px; background: yellowgreen; color: white">
+                    </form>
                 </div>
             </div>
         </div>

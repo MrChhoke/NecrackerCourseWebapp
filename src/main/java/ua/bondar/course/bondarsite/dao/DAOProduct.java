@@ -13,11 +13,15 @@ import java.util.List;
 
 
 @Component
-public class DAOGoods {
+public class DAOProduct {
 
-    private final String URL = "jdbc:postgresql://localhost:5432/postgres";
-    private final String USER = "postgres";
-    private final String PASSWORD = "1234";
+    @Value("${spring.datasource.url}")
+    private String URL;
+    @Value("${spring.datasource.username}")
+    private String USER = "postgres";
+    @Value("${spring.datasource.password}")
+    private String PASSWORD;
+
     private Connection connection;
 
     public List<Product> getGoods(){
@@ -27,12 +31,12 @@ public class DAOGoods {
             connection = DriverManager.getConnection(URL,USER,PASSWORD);
 
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM goods");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM product");
 
             while (resultSet.next()){
                 Product product = new Product();
                 product.setId(resultSet.getLong("id"));
-                product.setNameImg(resultSet.getString("urlimage"));
+                product.setNameImg(resultSet.getString("name_img"));
                 product.setName(resultSet.getString("name"));
                 product.setPrice(resultSet.getDouble("price"));
                 product.setDescription(resultSet.getString("description"));
@@ -51,14 +55,14 @@ public class DAOGoods {
         try {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(URL,USER,PASSWORD);
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM goods WHERE id=?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM product WHERE id=?");
             statement.setBigDecimal(1, new BigDecimal(id));
             ResultSet resultSet = statement.executeQuery();
             Product product = null;
             while(resultSet.next()) {
                 product = new Product();
                 product.setId(resultSet.getLong("id"));
-                product.setNameImg(resultSet.getString("urlimage"));
+                product.setNameImg(resultSet.getString("name_img"));
                 product.setName(resultSet.getString("name"));
                 product.setPrice(resultSet.getDouble("price"));
                 product.setDescription(resultSet.getString("description"));
@@ -78,7 +82,7 @@ public class DAOGoods {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(URL,USER,PASSWORD);
 
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO goods(name,price,urlimage,description,category)" +
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO product(name,price,name_img,description,category)" +
                     " VALUES(?,?,?,?,?)");
             ps.setString(1, product.getName());
             ps.setDouble(2, product.getPrice());
@@ -96,7 +100,7 @@ public class DAOGoods {
         try{
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(URL,USER,PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM goods WHERE id=?");
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM product WHERE id=?");
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
             preparedStatement.close();

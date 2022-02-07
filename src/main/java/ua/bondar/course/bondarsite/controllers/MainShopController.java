@@ -11,7 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ua.bondar.course.bondarsite.dao.DAOGoods;
+import ua.bondar.course.bondarsite.dao.DAOProduct;
 import ua.bondar.course.bondarsite.model.CategoryProduct;
 import ua.bondar.course.bondarsite.model.Product;
 import ua.bondar.course.bondarsite.model.UserOfShop;
@@ -33,7 +33,7 @@ public class MainShopController {
 
 
     @Autowired
-    private DAOGoods daoGoods;
+    private DAOProduct daoProduct;
 
 
     @GetMapping("/")
@@ -53,8 +53,8 @@ public class MainShopController {
     @GetMapping("/{id}")
     public String product(@AuthenticationPrincipal UserOfShop user,
                           Model model, @PathVariable(name = "id") Long id){
-        List<Product> goods = daoGoods.getGoods();
-        model.addAttribute("product", daoGoods.getProductById(id));
+        List<Product> goods = daoProduct.getGoods();
+        model.addAttribute("product", daoProduct.getProductById(id));
 
         if(user != null){
             model.addAttribute("user", user.getUsername());
@@ -84,7 +84,7 @@ public class MainShopController {
     @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
     @DeleteMapping("/adminpanel/{id}")
     public String deleteInAdminPanel(Model model, @PathVariable(name = "id") Long id){
-        daoGoods.deleteProductById(id);
+        daoProduct.deleteProductById(id);
         return "redirect:/adminpanel";
     }
 
@@ -107,8 +107,6 @@ public class MainShopController {
             }
             if (category == null) category = CategoryProduct.getAllCategoryProductInString().get(1);
             product.setCategory(CategoryProduct.getCategoryProduct(category));
-            product.setId(0L);
-
 
             if(file.isEmpty()){
                 File fileChange = new File("C:\\Users\\vladb\\IdeaProjects\\bondarSite\\src\\main\\resources\\static\\img\\defaulIcon.png");
@@ -118,16 +116,16 @@ public class MainShopController {
             }else{
                 product.setNameImg(Base64.getEncoder().encodeToString(file.getBytes()));
             }
-            daoGoods.setProduct(product);
+            daoProduct.setProduct(product);
         return "redirect:/adminpanel";
     }
 
     private List<List<Product>> positionForModel(){
-        List<Product> goods =  daoGoods.getGoods();
+        List<Product> goods =  daoProduct.getGoods();
         List<List<Product>> goodsForModal = new ArrayList<>();
         int index = 0;
         for(int i = 0; i < goods.size(); i += COUNT_GOODS_IN_PAGE){
-            goodsForModal.add(new ArrayList<Product>());
+            goodsForModal.add(new ArrayList<>());
             for(int j = 0; j < COUNT_GOODS_IN_PAGE && i+j < goods.size(); j++){
                 goodsForModal.get(index).add(goods.get(i+j));
             }

@@ -1,0 +1,103 @@
+package ua.bondar.course.bondarsite.controllers;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import ua.bondar.course.bondarsite.dao.DAOProduct;
+import ua.bondar.course.bondarsite.model.ShoppingCart;
+import ua.bondar.course.bondarsite.model.UserOfShop;
+import ua.bondar.course.bondarsite.service.ShoppingCartService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.UUID;
+
+@Controller
+public class CardController {
+
+    @Autowired
+    private DAOProduct daoProduct;
+
+    @Autowired
+    private ShoppingCartService shoppingCartService;
+
+    @PostMapping("/addToCart/{id}")
+    public String addToCart(HttpSession httpSession, Model model,
+                            @RequestParam("amount") int amount,
+                            @PathVariable(name = "id") Long id){
+        String tokenSession = (String) httpSession.getAttribute("sessionToken");
+        if(tokenSession == null){
+            tokenSession = UUID.randomUUID().toString();
+            httpSession.setAttribute("sessionToken", tokenSession);
+            shoppingCartService.addShoppingCartFirstTime(id,tokenSession, amount);
+            return "redirect:/";
+        }
+
+        shoppingCartService.addToExistingShoppingCart(id,tokenSession,amount);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/shoppingCart")
+    public String shoppingCart(@AuthenticationPrincipal UserOfShop user, HttpServletRequest request, Model model){
+        if(user != null){
+            model.addAttribute("user", user.getUsername());
+        }else{
+            model.addAttribute("user", "anom1");
+        }
+
+        String sessionToken = (String) request.getSession(true).getAttribute("sessionToken");
+        if(sessionToken == null){
+            model.addAttribute("shoppingCart", new ShoppingCart());
+        }else{
+            ShoppingCart shoppingCart = shoppingCartService.getShoppingCartByTokenSession(sessionToken);
+            model.addAttribute("shoppingCart", shoppingCart);
+        }
+
+        return "shoppingCart";
+    }
+
+    @PostMapping("/updateShoppingCart")
+    public String updateCartItem(@AuthenticationPrincipal UserOfShop user, HttpServletRequest request, Model model,
+                                 @RequestParam("item_id") Long id, @RequestParam("amount") int amount){
+        if(user != null){
+            model.addAttribute("user", user.getUsername());
+        }else{
+            model.addAttribute("user", "anom1");
+        }
+
+
+        shoppingCartService.updateShoppingCartItem(id, amount);
+        return "redirect:/shoppingCart";
+    }
+
+    @GetMapping("/removeItem/{id}")
+    public String removeItem(@PathVariable("id") Long id, HttpServletRequest request){
+        String sessionToken = (String) request.getSession(false).getAttribute("sessionToken");
+        shoppingCartService.removeCartItemFromShoppingCard(id,sessionToken);
+        return "redirect:/shoppingCart";
+    }
+
+    @GetMapping("/clearShoppingCart")
+    public String clearShoppingCart(HttpServletRequest request){
+        String sessionToken = (String) request.getSession(false).getAttribute("sessionToken");
+        request.getSession(false).removeAttribute("sessionToken");
+        shoppingCartService.clearShoppingCart(sessionToken);
+        return "redirect:/shoppingCart";
+    }
+
+    @GetMapping("/buyShoppingCart")
+    public String buyShoppingCart(HttpServletRequest request, @RequestParam("location") String location){
+        String sessionToken = (String) request.getSession(false).getAttribute("sessionToken");
+        request.getSession(false).removeAttribute("sessionToken");
+        shoppingCartService.buyShoppingCart(sessionToken);
+        System.out.println("Місце доставки: " + location);
+        return "redirect:/shoppingCart";
+    }
+}

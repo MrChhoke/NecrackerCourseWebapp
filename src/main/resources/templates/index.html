@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
+<html lang="en" xmlns:th="http://thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title>BestShopOnline</title>
     <link href="../static/css/style.css" rel="stylesheet" />
@@ -16,9 +16,11 @@
 
         <div style="display: flex;">
             <div></div>
+            <a th:href="@{/shoppingCart}" class="header-link">Корзина</a>
             <a th:if="${user == 'anom1'}" th:href="@{/login}" class="header-link">Авторизація</a>
             <a th:if="${user == 'anom1'}" th:href="@{/registration}" class="header-link">Регістрація</a>
             <a th:if="${user != 'anom1'}" class="header-link" th:text="${user}" th:href="@{/}"></a>
+<!--            <a sec:authorize="hasRole('ADMIN')" class="header-link" th:href="@{/adminpanel}">AdminPanel</a>-->
             <form th:if="${user != 'anom1'}" th:action="@{/logout}" method="post">
                 <input type="submit" value="Sign Out"/>
             </form>
