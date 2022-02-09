@@ -1,32 +1,37 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Shopping cart</title>
     <link href="../static/css/style.css" rel="stylesheet" />
+    <link rel="icon" href="https://igorzuevich.com/wp-content/uploads/2016/01/shop-icon.png">
 </head>
 <body>
-    <div class="header">
-        <a th:href="@{/}" class="header-link" style="margin-left: 60px">BestShopOnline!</a>
+<div class="header">
+    <a th:href="@{/}" class="header-link" style="margin-left: 60px">BestShopOnline!</a>
 
-        <div style="display: flex">
-            <a th:href="@{/}" class="header-link">Категорії</a>
-            <a th:href="@{/}" class="header-link">Відгуки</a>
-            <a th:href="@{/}" class="header-link">Запитання</a>
-        </div>
-
-        <div style="display: flex;">
-            <div></div>
-            <a th:href="@{/shoppingCart}" class="header-link">Корзина</a>
-            <a th:if="${user == 'anom1'}" th:href="@{/login}" class="header-link">Авторизація</a>
-            <a th:if="${user == 'anom1'}" th:href="@{/registration}" class="header-link">Регістрація</a>
-            <a th:if="${user != 'anom1'}" class="header-link" th:text="${user}" th:href="@{/}"></a>
-            <!--            <a sec:authorize="hasRole('ADMIN')" class="header-link" th:href="@{/adminpanel}">AdminPanel</a>-->
-            <form th:if="${user != 'anom1'}" th:action="@{/logout}" method="post">
-                <input type="submit" value="Sign Out"/>
-            </form>
-        </div>
+    <div style="display: flex">
+        <a th:href="@{/}" class="header-link">Категорії</a>
+        <a th:href="@{/feedback}" class="header-link">Відгуки</a>
+        <a th:href="@{/}" class="header-link">Запитання</a>
     </div>
 
+    <div style="display: flex;">
+        <div></div>
+        <a th:href="@{/shoppingCart}" class="header-link">Корзина</a>
+        <a th:if="${user == 'anom1'}" th:href="@{/login}" class="header-link">Авторизація</a>
+        <a th:if="${user == 'anom1'}" th:href="@{/registration}" class="header-link">Регістрація</a>
+        <a th:if="${user != 'anom1'}" class="header-link" th:text="${user}" th:href="@{/profile}"></a>
+        <a sec:authorize="hasAuthority('ADMIN')" class="header-link" th:href="@{/adminpanel}" th:text="AdminPanel"></a>
+        <form th:if="${user != 'anom1'}" th:action="@{/logout}" method="post">
+            <input class="header-link" style="border: 0 solid black;" type="submit" value="Вихід"/>
+        </form>
+    </div>
+</div>
+
+    <div th:if="${shoppingCart.getItems().size() == 0}" class="container" style="margin-top: 50px; justify-content: center; align-items: center;">
+        <h1 style="font-size: 50px">Корзина замовлень порожня!</h1>
+    </div>
 
     <div th:if="${shoppingCart.getItems().size() != 0}" class="container" style="margin-top: 50px">
         <a th:href="@{/clearShoppingCart}"><h1>Очистити корзину</h1></a>

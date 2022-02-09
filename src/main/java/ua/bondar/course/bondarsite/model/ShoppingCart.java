@@ -29,6 +29,14 @@ public class ShoppingCart {
 
     private String tokenSession;
 
+    private String location;
+
+    private Boolean active;
+
+    private String buyerName;
+
+    private Boolean compliedOrder;
+
     public ShoppingCart(){
         items = new HashSet<>();
     }

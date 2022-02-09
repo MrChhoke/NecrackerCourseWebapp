@@ -15,6 +15,7 @@ import ua.bondar.course.bondarsite.dao.DAOProduct;
 import ua.bondar.course.bondarsite.model.CategoryProduct;
 import ua.bondar.course.bondarsite.model.Product;
 import ua.bondar.course.bondarsite.model.UserOfShop;
+import ua.bondar.course.bondarsite.service.ProductService;
 
 
 import javax.validation.Valid;
@@ -31,10 +32,8 @@ public class MainShopController {
 
     private final static int COUNT_GOODS_IN_PAGE = 5;
 
-
     @Autowired
-    private DAOProduct daoProduct;
-
+    private ProductService productService;
 
     @GetMapping("/")
     public String index(@AuthenticationPrincipal UserOfShop user, Model model){
@@ -53,8 +52,7 @@ public class MainShopController {
     @GetMapping("/{id}")
     public String product(@AuthenticationPrincipal UserOfShop user,
                           Model model, @PathVariable(name = "id") Long id){
-        List<Product> goods = daoProduct.getGoods();
-        model.addAttribute("product", daoProduct.getProductById(id));
+        model.addAttribute("product", productService.getProductById(id));
 
         if(user != null){
             model.addAttribute("user", user.getUsername());
@@ -84,7 +82,7 @@ public class MainShopController {
     @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
     @DeleteMapping("/adminpanel/{id}")
     public String deleteInAdminPanel(Model model, @PathVariable(name = "id") Long id){
-        daoProduct.deleteProductById(id);
+        productService.deleteById(id);
         return "redirect:/adminpanel";
     }
 
@@ -116,12 +114,12 @@ public class MainShopController {
             }else{
                 product.setNameImg(Base64.getEncoder().encodeToString(file.getBytes()));
             }
-            daoProduct.setProduct(product);
+            productService.addProductForFirstTime(product);
         return "redirect:/adminpanel";
     }
 
     private List<List<Product>> positionForModel(){
-        List<Product> goods =  daoProduct.getGoods();
+        List<Product> goods =  productService.getAllProduct();
         List<List<Product>> goodsForModal = new ArrayList<>();
         int index = 0;
         for(int i = 0; i < goods.size(); i += COUNT_GOODS_IN_PAGE){

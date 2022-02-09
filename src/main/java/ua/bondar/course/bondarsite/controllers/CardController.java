@@ -22,9 +22,6 @@ import java.util.UUID;
 public class CardController {
 
     @Autowired
-    private DAOProduct daoProduct;
-
-    @Autowired
     private ShoppingCartService shoppingCartService;
 
     @PostMapping("/addToCart/{id}")
@@ -93,11 +90,22 @@ public class CardController {
     }
 
     @GetMapping("/buyShoppingCart")
-    public String buyShoppingCart(HttpServletRequest request, @RequestParam("location") String location){
+    public String buyShoppingCart(@AuthenticationPrincipal UserOfShop user,
+                                  Model model,
+                                  HttpServletRequest request, @RequestParam("location") String location){
+        if(user != null){
+            model.addAttribute("user", user.getUsername());
+        }else{
+            model.addAttribute("user", "anom1");
+        }
+
         String sessionToken = (String) request.getSession(false).getAttribute("sessionToken");
         request.getSession(false).removeAttribute("sessionToken");
-        shoppingCartService.buyShoppingCart(sessionToken);
-        System.out.println("Місце доставки: " + location);
+        if(user != null) {
+            shoppingCartService.buyShoppingCart(sessionToken, location, user.getUsername());
+        } else {
+            shoppingCartService.buyShoppingCart(sessionToken, location, null);
+        }
         return "redirect:/shoppingCart";
     }
 }

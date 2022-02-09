@@ -10,6 +10,7 @@ import ua.bondar.course.bondarsite.repo.CardItemRepository;
 import ua.bondar.course.bondarsite.repo.ShoppingCartRepository;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -21,22 +22,24 @@ public class ShoppingCartService {
     private CardItemRepository cardItemRepository;
 
     @Autowired
-    private DAOProduct daoProduct;
+    private ProductService productService;
+
 
     public ShoppingCart addShoppingCartFirstTime(Long id, String sessionToken, int amount){
         ShoppingCart shoppingCart = new ShoppingCart();
         CartItem cartItem = new CartItem();
         cartItem.setDate(new Date());
         cartItem.setAmount(amount);
-        cartItem.setProduct(daoProduct.getProductById(id));
+        cartItem.setProduct(productService.getProductById(id));
         shoppingCart.getItems().add(cartItem);
+        shoppingCart.setCompliedOrder(false);
         shoppingCart.setTokenSession(sessionToken);
         return shoppingCartRepository.save(shoppingCart);
     }
 
     public ShoppingCart addToExistingShoppingCart(Long id, String sessionToken, int amount){
         ShoppingCart shoppingCart = shoppingCartRepository.findByTokenSession(sessionToken);
-        Product p = daoProduct.getProductById(id);
+        Product p = productService.getProductById(id);
         for (CartItem item : shoppingCart.getItems()) {
             if (p.getId().equals(item.getProduct().getId())) {
                 item.setAmount(item.getAmount() + amount);
@@ -45,7 +48,7 @@ public class ShoppingCartService {
         }
         CartItem cardItem = new CartItem();
         cardItem.setDate(new Date());
-        cardItem.setProduct(daoProduct.getProductById(id));
+        cardItem.setProduct(productService.getProductById(id));
         cardItem.setAmount(amount);
         shoppingCart.getItems().add(cardItem);
         return shoppingCartRepository.saveAndFlush(shoppingCart);
@@ -82,12 +85,34 @@ public class ShoppingCartService {
         shoppingCartRepository.delete(sh);
     }
 
-    public void buyShoppingCart(String sessionToken) {
+    public ShoppingCart buyShoppingCart(String sessionToken, String location, String buyerName) {
         ShoppingCart sh = shoppingCartRepository.findByTokenSession(sessionToken);
-        for(CartItem cartItem : sh.getItems()){
-            System.out.println(cartItem.getProduct().getName() + " count = " + cartItem.getAmount() +
-                    " date = " + cartItem.getDate());
-        }
-        shoppingCartRepository.delete(sh);
+        sh.setLocation(location);
+        sh.setActive(true);
+        sh.setCompliedOrder(true);
+        sh.setTokenSession(null);
+        sh.setDate(new Date());
+        sh.setBuyerName(buyerName);
+        return shoppingCartRepository.saveAndFlush(sh);
     }
+
+    public void acceptOrder(Long id){
+        ShoppingCart sh = shoppingCartRepository.findShoppingCartById(id);
+        sh.setActive(false);
+        shoppingCartRepository.saveAndFlush(sh);
+    }
+
+    public List<ShoppingCart> getShoppingCartsByActive(Boolean active){
+        return shoppingCartRepository.findShoppingCartsByActive(active);
+    }
+
+    public List<ShoppingCart> getHistoryOfUser(String username){
+        return shoppingCartRepository.findShoppingCartByBuyerNameAndCompliedOrder(username,true);
+    }
+
+
+    public void deleteTheExecutedOrderById(Long id){
+        shoppingCartRepository.deleteById(id);
+    }
+
 }

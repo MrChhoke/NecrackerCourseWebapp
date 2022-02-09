@@ -24,10 +24,12 @@
     background-color: #73ab09;
 }
 
-a.header-link{
+input.header-link,a.header-link{
     color: white;
     background-color: #73ab09;
     padding: 0 15px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 24px;
 }
 
 a {

@@ -16,7 +16,6 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "Поле не может быть пустым!")
     @Size(min = 3, max = 30, message = "Имя должно быть между 3 и 30 символами!")
     private String name;
 
@@ -32,4 +31,6 @@ public class Product {
     @Column(columnDefinition = "TEXT")
     private String nameImg;
 
+
+    private Boolean active = true;
 }
