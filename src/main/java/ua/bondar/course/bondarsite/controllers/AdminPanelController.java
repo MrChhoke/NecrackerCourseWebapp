@@ -1,5 +1,7 @@
 package ua.bondar.course.bondarsite.controllers;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,6 +27,8 @@ import java.util.List;
 public class AdminPanelController {
 
     private final static int COUNT_GOODS_IN_PAGE = 5;
+
+    private static final Logger logger = LogManager.getLogger(AdminPanelController.class);
 
     @Autowired
     private ProductService productService;

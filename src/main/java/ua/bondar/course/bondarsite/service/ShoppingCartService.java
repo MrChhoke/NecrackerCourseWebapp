@@ -1,5 +1,7 @@
 package ua.bondar.course.bondarsite.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.bondar.course.bondarsite.dao.DAOProduct;
@@ -15,6 +17,9 @@ import java.util.Set;
 
 @Service
 public class ShoppingCartService {
+
+    private static final Logger logger = LogManager.getLogger(ShoppingCart.class);
+
     @Autowired
     private ShoppingCartRepository shoppingCartRepository;
 
@@ -34,6 +39,7 @@ public class ShoppingCartService {
         shoppingCart.getItems().add(cartItem);
         shoppingCart.setCompliedOrder(false);
         shoppingCart.setTokenSession(sessionToken);
+        logger.info("Створено корзину за сесійним токеном: " + sessionToken);
         return shoppingCartRepository.save(shoppingCart);
     }
 
@@ -51,6 +57,7 @@ public class ShoppingCartService {
         cardItem.setProduct(productService.getProductById(id));
         cardItem.setAmount(amount);
         shoppingCart.getItems().add(cardItem);
+        logger.info("Додано предмет в корзину за сесійним токеном: " + sessionToken);
         return shoppingCartRepository.saveAndFlush(shoppingCart);
 
     }
@@ -62,6 +69,7 @@ public class ShoppingCartService {
     public CartItem updateShoppingCartItem(Long id, int amount) {
         CartItem cartItem = cardItemRepository.findById(id).get();
         cartItem.setAmount(amount);
+        logger.info("Обновлено корзину за id: " + id);
         return cardItemRepository.saveAndFlush(cartItem);
     }
 
@@ -77,11 +85,13 @@ public class ShoppingCartService {
         items.remove(cartItem);
         cardItemRepository.delete(cartItem);
         shoppingCart.setItems(items);
+        logger.info("Видалення з корзини за id: " + id);
         return shoppingCartRepository.save(shoppingCart);
     }
 
     public void clearShoppingCart(String sessionToken) {
         ShoppingCart sh = shoppingCartRepository.findByTokenSession(sessionToken);
+        logger.info("Очищення корзини за сесійним токеном: " + sessionToken);
         shoppingCartRepository.delete(sh);
     }
 
@@ -93,12 +103,17 @@ public class ShoppingCartService {
         sh.setTokenSession(null);
         sh.setDate(new Date());
         sh.setBuyerName(buyerName);
+        if(buyerName != null)
+            logger.info("Оформлення замовлення клієнтом: " + buyerName);
+        else
+            logger.info("Оформлення замовлення за сесійним токен: " + sessionToken);
         return shoppingCartRepository.saveAndFlush(sh);
     }
 
     public void acceptOrder(Long id){
         ShoppingCart sh = shoppingCartRepository.findShoppingCartById(id);
         sh.setActive(false);
+        logger.info("Обробка замовлення №" + id + " адмінстратором");
         shoppingCartRepository.saveAndFlush(sh);
     }
 

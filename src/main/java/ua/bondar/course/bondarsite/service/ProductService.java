@@ -1,5 +1,7 @@
 package ua.bondar.course.bondarsite.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.bondar.course.bondarsite.model.CategoryProduct;
@@ -10,6 +12,8 @@ import java.util.List;
 
 @Service
 public class ProductService {
+
+    private final static Logger logger = LogManager.getLogger(ProductService.class);
 
     @Autowired
     private ProductRepository productRepository;
@@ -23,6 +27,7 @@ public class ProductService {
     }
 
     public Product addProductForFirstTime(Product product){
+        logger.info("Був доданий продукт: " + product.getName());
         return productRepository.saveAndFlush(product);
     }
 
@@ -33,6 +38,7 @@ public class ProductService {
     public Product deleteById(Long id){
         Product product = productRepository.findProductById(id);
         product.setActive(false);
+        logger.info("Замовлення №" + id + " виконано адмністратором");
         return productRepository.saveAndFlush(product);
     }
 }
