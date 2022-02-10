@@ -15,6 +15,9 @@ public enum CategoryProduct {
 
 
     public static CategoryProduct getCategoryProduct(String category){
+        if(category == null)
+            return null;
+
         switch (category){
             case "Phone": return Phone;
             case "Notepad": return Notepad;

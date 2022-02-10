@@ -36,10 +36,31 @@ public class MainShopController {
     private ProductService productService;
 
     @GetMapping("/")
-    public String index(@AuthenticationPrincipal UserOfShop user, Model model){
+    public String index(@AuthenticationPrincipal UserOfShop user,
+                        Model model,@RequestParam(value = "category", required = false) String category){
 
-        List<List<Product>> goodsForModal = positionForModel();
+        List<List<Product>> goodsForModal = positionForModel(category);
+        List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
         model.addAttribute("goodsForModal", goodsForModal);
+        model.addAttribute("allCategory", allCategory);
+
+        if(user != null){
+            model.addAttribute("user", user.getUsername());
+            return "index";
+        }
+        model.addAttribute("user", "anom1");
+        return "index";
+    }
+
+    @PostMapping("/")
+    public String indexSortByCategory(@AuthenticationPrincipal UserOfShop user,
+                        Model model,
+                        @RequestParam(value = "category", required = false) String category){
+
+        List<List<Product>> goodsForModal = positionForModel(category);
+        List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
+        model.addAttribute("goodsForModal", goodsForModal);
+        model.addAttribute("allCategory", allCategory);
 
         if(user != null){
             model.addAttribute("user", user.getUsername());
@@ -62,64 +83,18 @@ public class MainShopController {
         return "product";
     }
 
-    @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
-    @GetMapping("/adminpanel")
-    public String adminPanel(@AuthenticationPrincipal UserOfShop user,
-                             @ModelAttribute("formproduct") Product product, Model model){
-        List<List<Product>> goodsForModal = positionForModel();
-        List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
-        model.addAttribute("goodsForModal", goodsForModal);
-        model.addAttribute("allCategory", allCategory);
 
-        if(user != null){
-            model.addAttribute("user", user.getUsername());
-            return "adminPanel";
+    private List<List<Product>> positionForModel(String category){
+
+        CategoryProduct categoryProduct = CategoryProduct.getCategoryProduct(category);
+
+        List<Product> goods = null;
+
+        if(categoryProduct == null)
+            goods =  productService.getAllProduct();
+        else{
+            goods = productService.getAllProductByCategory(categoryProduct);
         }
-        model.addAttribute("user", "anom1");
-        return "adminPanel";
-    }
-
-    @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
-    @DeleteMapping("/adminpanel/{id}")
-    public String deleteInAdminPanel(Model model, @PathVariable(name = "id") Long id){
-        productService.deleteById(id);
-        return "redirect:/adminpanel";
-    }
-
-    @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
-    @PostMapping("/adminpanel")
-    public String createProduct(@AuthenticationPrincipal UserOfShop user,
-                                @ModelAttribute("formproduct") @Valid Product product,
-                                BindingResult bindingResult, Model model,
-                                @RequestParam(value = "file", required = false) MultipartFile file,
-                                @RequestParam(value = "category", required = false) String category) throws IOException {
-
-            model.addAttribute("user", user.getUsername());
-
-            if(bindingResult.hasErrors()){
-                List<List<Product>> goodsForModal = positionForModel();
-                List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
-                model.addAttribute("goodsForModal", goodsForModal);
-                model.addAttribute("allCategory", allCategory);
-                return "adminPanel";
-            }
-            if (category == null) category = CategoryProduct.getAllCategoryProductInString().get(1);
-            product.setCategory(CategoryProduct.getCategoryProduct(category));
-
-            if(file.isEmpty()){
-                File fileChange = new File("C:\\Users\\vladb\\IdeaProjects\\bondarSite\\src\\main\\resources\\static\\img\\defaulIcon.png");
-                try(FileInputStream fileInputStream = new FileInputStream(fileChange)){
-                    product.setNameImg(Base64.getEncoder().encodeToString(fileInputStream.readAllBytes()));
-                }
-            }else{
-                product.setNameImg(Base64.getEncoder().encodeToString(file.getBytes()));
-            }
-            productService.addProductForFirstTime(product);
-        return "redirect:/adminpanel";
-    }
-
-    private List<List<Product>> positionForModel(){
-        List<Product> goods =  productService.getAllProduct();
         List<List<Product>> goodsForModal = new ArrayList<>();
         int index = 0;
         for(int i = 0; i < goods.size(); i += COUNT_GOODS_IN_PAGE){

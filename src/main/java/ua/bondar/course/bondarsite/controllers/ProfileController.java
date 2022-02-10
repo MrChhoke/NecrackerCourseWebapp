@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import ua.bondar.course.bondarsite.model.UserOfShop;
 import ua.bondar.course.bondarsite.service.ShoppingCartService;
 
@@ -25,7 +26,7 @@ public class ProfileController {
         return "profile";
     }
 
-    @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
+    @PreAuthorize(value = "hasAuthority('ADMIN')")
     @DeleteMapping("/profile/doneOrder/{id}")
     public String doneOrder(@PathVariable(name = "id") long id){
         shoppingCartService.acceptOrder(id);

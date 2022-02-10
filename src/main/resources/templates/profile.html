@@ -13,7 +13,6 @@
     <a th:href="@{/}" class="header-link" style="margin-left: 60px">BestShopOnline!</a>
 
     <div style="display: flex">
-        <a th:href="@{/}" class="header-link">Категорії</a>
         <a th:href="@{/feedback}" class="header-link">Відгуки</a>
         <a th:href="@{/}" class="header-link">Запитання</a>
     </div>
@@ -50,12 +49,12 @@
                     <h1 th:text="' ' + ${listProduct.getLocation()}" style="padding-right: 20px"></h1>
                     <h1 style="padding-right: 20px">Date: </h1>
                     <h1 th:text="' ' + ${listProduct.getDate()}" style="padding-right: 20px"></h1>
-                    <div th:if="${listProduct.getBuyerName() != null}">
+                    <div style="display: flex" th:if="${listProduct.getBuyerName() != null}">
                         <h1 style="padding-right: 20px">BuyerName: </h1>
                         <h1 th:text="' ' + ${listProduct.getBuyerName()}" style="padding-right: 20px"></h1>
                     </div>
-                    <form th:if="${user != 'anom1'}" th:action="@{/logout}" method="post">
-                        <input class="header-link" style="border: 0 solid black;" type="submit" value="Вихід"/>
+                    <form th:if="${user != 'anom1'}" th:action="@{/profile/doneOrder/{id}(id = ${listProduct.getId()}) }" th:method="DELETE">
+                        <input class="header-link" style="border: 0 solid black;" type="submit" value="Done"/>
                     </form>
                 </div>
             </div>

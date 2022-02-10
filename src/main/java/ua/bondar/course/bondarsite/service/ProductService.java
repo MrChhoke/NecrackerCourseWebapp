@@ -2,6 +2,7 @@ package ua.bondar.course.bondarsite.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.bondar.course.bondarsite.model.CategoryProduct;
 import ua.bondar.course.bondarsite.model.Product;
 import ua.bondar.course.bondarsite.repo.ProductRepository;
 
@@ -23,6 +24,10 @@ public class ProductService {
 
     public Product addProductForFirstTime(Product product){
         return productRepository.saveAndFlush(product);
+    }
+
+    public List<Product> getAllProductByCategory(CategoryProduct categoryProduct){
+        return productRepository.findProductByCategoryAndActive(categoryProduct,true);
     }
 
     public Product deleteById(Long id){
