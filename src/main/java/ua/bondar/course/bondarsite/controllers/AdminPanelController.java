@@ -78,7 +78,7 @@ public class AdminPanelController {
         product.setCategory(CategoryProduct.getCategoryProduct(category));
 
         if(file.isEmpty()){
-            File fileChange = new File("C:\\Users\\vladb\\IdeaProjects\\bondarSite\\src\\main\\resources\\static\\img\\defaulIcon.png");
+            File fileChange = new File("src\\main\\resources\\static\\img\\defaulIcon.png");
             try(FileInputStream fileInputStream = new FileInputStream(fileChange)){
                 product.setNameImg(Base64.getEncoder().encodeToString(fileInputStream.readAllBytes()));
             }
