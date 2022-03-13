@@ -38,6 +38,8 @@
                 <div>
                     <div th:text="${product.getName()}" style="justify-content: center; margin: 0 auto; font-size: 50px; color: black">Static content</div>
                     <div th:text="'Price: ' + ${product.getPrice()} + '$'" style="color: black; font-size: 35px;"></div>
+                    <div th:if="${T(ua.bondar.course.bondarsite.dto.ExchangeClient).getCurrency() != null}"
+                         th:text="'Price: ' + ${T(Math).round(T(ua.bondar.course.bondarsite.dto.ExchangeDTO).exchangeUSDforUAH(product.getPrice()))} + '₴'" style="color: black; font-size: 35px;"></div>
                     <div th:text="'Category: ' + ${product.getCategory().getStringCategory()}" style="color: black; font-size: 35px;"></div>
                     <div th:text="'Description: ' +  ${product.getDescription()}" style="color: black; font-size: 20px;"></div>
                     <form th:if="${product.getActive() == true}" method="post" th:action="@{/addToCart/{id}(id = ${product.getId()})}" style="display: flex; justify-content: flex-end;">
