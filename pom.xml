@@ -96,6 +96,7 @@
                 <version>2.4.1</version>
             </plugin>
         </plugins>
+        <finalName>best-shop</finalName>
     </build>
 
 </project>
