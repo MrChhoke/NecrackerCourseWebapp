@@ -28,6 +28,7 @@ public class UserOfShop implements UserDetails {
     @Enumerated(EnumType.STRING)
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "roles")
+    @NotNull
     private Set<Role> roles = new HashSet<>();
 
     @Override
