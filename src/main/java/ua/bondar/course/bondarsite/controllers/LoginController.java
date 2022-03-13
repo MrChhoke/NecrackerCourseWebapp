@@ -1,5 +1,6 @@
 package ua.bondar.course.bondarsite.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,8 @@ import ua.bondar.course.bondarsite.model.RegisterForm;
 import ua.bondar.course.bondarsite.repo.UserRepo;
 
 @Controller
+@Slf4j
 public class LoginController {
-
-    private static final Logger logger = LogManager.getLogger(LoginController.class);
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -37,11 +37,11 @@ public class LoginController {
         * anom1 - це недоступне ім'я для юзера!
         */
         if(form.getUsername().equals("anom1")){
-            logger.error("Спроба створити забороненого юзера!");
+            log.error("Спроба створити забороненого юзера!");
             return "registration";
         }
 
-        logger.info("Створено юзера: " + form.getUsername());
+        log.info("Створено юзера: " + form.getUsername());
         userRepo.save(form.toUser(passwordEncoder));
         return "redirect:/login";
     }

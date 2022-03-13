@@ -1,0 +1,28 @@
+2022-03-13 13:55:39.442  INFO 15368 --- [restartedMain] u.b.c.bondarsite.BondarSiteApplication   : Starting BondarSiteApplication using Java 15.0.1 on DESKTOP-SKH4LEI with PID 15368 (C:\Users\vladb\IdeaProjects\bondarSite\target\classes started by vladb in C:\Users\vladb\IdeaProjects\bondarSite)
+2022-03-13 13:55:39.443  INFO 15368 --- [restartedMain] u.b.c.bondarsite.BondarSiteApplication   : No active profile set, falling back to default profiles: default
+2022-03-13 13:55:39.491  INFO 15368 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-03-13 13:55:39.495  INFO 15368 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-03-13 13:55:40.092  INFO 15368 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-03-13 13:55:40.149  INFO 15368 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 50 ms. Found 5 JPA repository interfaces.
+2022-03-13 13:55:40.593  INFO 15368 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8298 (http)
+2022-03-13 13:55:40.599  INFO 15368 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-03-13 13:55:40.599  INFO 15368 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.56]
+2022-03-13 13:55:40.678  INFO 15368 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-03-13 13:55:40.678  INFO 15368 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1182 ms
+2022-03-13 13:55:40.787  INFO 15368 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-03-13 13:55:40.816  INFO 15368 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.4.Final
+2022-03-13 13:55:40.894  INFO 15368 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-03-13 13:55:40.946  INFO 15368 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-03-13 13:55:41.081  INFO 15368 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-03-13 13:55:41.094  INFO 15368 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL10Dialect
+2022-03-13 13:55:41.718  INFO 15368 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-03-13 13:55:41.723  INFO 15368 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-03-13 13:55:41.760  WARN 15368 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-03-13 13:55:42.226  INFO 15368 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4a06be, org.springframework.security.web.context.SecurityContextPersistenceFilter@4bbaa861, org.springframework.security.web.header.HeaderWriterFilter@1c12bcf0, org.springframework.security.web.authentication.logout.LogoutFilter@24546969, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@41d30486, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7fbbd716, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1e2fef40, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2376d94a, org.springframework.security.web.session.SessionManagementFilter@6721e9d6, org.springframework.security.web.access.ExceptionTranslationFilter@2e60f532, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@6c96af5f]
+2022-03-13 13:55:42.392  INFO 15368 --- [restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2022-03-13 13:55:42.546  INFO 15368 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-03-13 13:55:42.580  INFO 15368 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8298 (http) with context path ''
+2022-03-13 13:55:42.589  INFO 15368 --- [restartedMain] u.b.c.bondarsite.BondarSiteApplication   : Started BondarSiteApplication in 3.484 seconds (JVM running for 4.128)
+2022-03-13 13:59:16.689  INFO 15368 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-03-13 13:59:16.693  INFO 15368 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-03-13 13:59:16.697  INFO 15368 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

@@ -1,5 +1,6 @@
 package ua.bondar.course.bondarsite.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,10 @@ import java.util.Base64;
 import java.util.List;
 
 @Controller
+@Slf4j
 public class AdminPanelController {
 
     private final static int COUNT_GOODS_IN_PAGE = 5;
-
-    private static final Logger logger = LogManager.getLogger(AdminPanelController.class);
 
     @Autowired
     private ProductService productService;

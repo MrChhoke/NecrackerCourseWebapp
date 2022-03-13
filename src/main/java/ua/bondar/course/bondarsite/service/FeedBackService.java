@@ -1,5 +1,6 @@
 package ua.bondar.course.bondarsite.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,8 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Slf4j
 public class FeedBackService {
-
-    private final static Logger logger = LogManager.getLogger(FeedBackService.class);
 
     @Autowired
     private FeedBackRepositary feedBackRepositary;
@@ -25,12 +25,12 @@ public class FeedBackService {
 
     public FeedBack addNewFeedBack(FeedBack feedBack) {
         feedBack.setDate(new Date());
-        logger.info("Cтворено відгук: " + feedBack.getUserOfShop().getUsername() + " feedbackId: " + feedBack.getId());
+        log.info("Cтворено відгук: " + feedBack.getUserOfShop().getUsername() + " feedbackId: " + feedBack.getId());
         return feedBackRepositary.save(feedBack);
     }
 
     public void deleteById(Long id){
-        logger.info("Видалено відгук feedbackId: " + id);
+        log.info("Видалено відгук feedbackId: " + id);
         feedBackRepositary.deleteById(id);
     }
 }
