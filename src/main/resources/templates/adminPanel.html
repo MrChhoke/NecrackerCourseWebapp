@@ -9,105 +9,78 @@
     <link rel="icon" href="https://igorzuevich.com/wp-content/uploads/2016/01/shop-icon.png">
 </head>
 <body>
-<div class="header">
-    <a th:href="@{/}" class="header-link" style="margin-left: 60px">BestShopOnline!</a>
 
-    <div style="display: flex">
-        <a th:href="@{/feedback}" class="header-link">Відгуки</a>
-        <a th:href="@{/}" class="header-link">Запитання</a>
-    </div>
-
-    <div style="display: flex;">
-        <div></div>
-        <a th:href="@{/shoppingCart}" class="header-link">Корзина</a>
-        <a th:if="${user == 'anom1'}" th:href="@{/login}" class="header-link">Авторизація</a>
-        <a th:if="${user == 'anom1'}" th:href="@{/registration}" class="header-link">Регістрація</a>
-        <a th:if="${user != 'anom1'}" class="header-link" th:text="${user}" th:href="@{/profile}"></a>
-        <a sec:authorize="hasAuthority('ADMIN')" class="header-link" th:href="@{/adminpanel}" th:text="AdminPanel"></a>
-        <form th:if="${user != 'anom1'}" th:action="@{/logout}" method="post">
-            <input class="header-link" style="border: 0 solid black;" type="submit" value="Вихід"/>
-        </form>
-    </div>
-</div>
+<div th:replace="~{fragments/navbar :: header}">Header</div>
 
 
-    <div class="container" style="margin-top: 60px">
+<div class="container" style="margin-top: 60px">
 
-        <div class="form" style="width: 40%">
-            <form th:method="post" th:action="@{adminpanel}"
-                  style="display: flex; flex-direction: column" class="form" th:object="${formproduct}"
-                  enctype="multipart/form-data">
-                <div style="display: flex; flex-direction: column;">
-                    <div class="adminAddForm">
-                        <label class="form" for="name">Ім'я товару:</label>
-                        <div>
-                            <input class="form" th:field="*{name}" style="padding: 0" type="text" id="name">
-                            <h2 style="color: red; width: 80%;" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</h2>
-                        </div>
+    <div class="form" style="width: 40%">
+        <form th:method="post" th:action="@{adminpanel}"
+              style="display: flex; flex-direction: column" class="form" th:object="${formproduct}"
+              enctype="multipart/form-data">
+            <div style="display: flex; flex-direction: column;">
+                <div class="adminAddForm">
+                    <label class="form" for="name">Ім'я товару:</label>
+                    <div>
+                        <input class="form" th:field="*{name}" style="padding: 0" type="text" id="name">
+                        <h2 style="color: red; width: 80%;" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</h2>
                     </div>
-
-                    <div class="adminAddForm">
-                        <label class="form" for="price">Ціна:</label>
-                        <div>
-                            <input class="form" th:field="*{price}" style="padding: 0" type="text" id="price">
-                            <h2 style="color: red; width: 80%;" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Name Error</h2>
-                        </div>
-                    </div>
-
-                    <div class="adminAddForm">
-                        <label class="form" for="desc">Опис:</label>
-                        <div>
-                            <input class="form" th:field="*{description}" style="padding: 0" type="text" id="desc">
-                            <h2 style="color: red; width: 80%;" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Name Error</h2>
-                        </div>
-
-                    </div>
-                    <div style="display: flex; flex-direction: column">
-                        <label class="form" for="desc">Категорія:</label>
-                        <select style="font-size: 15px;" th:name="category">
-                            <option th:each="productCategory : ${allCategory}" th:text="${productCategory}"></option>
-                        </select>
-                    </div>
-                    <div class="adminAddForm">
-                        <label class="form" for="image">Фото: </label>
-                        <input class="form" type="file" name="file" id="image" value="upload" accept="image/png, image/jpeg" />
-                    </div>
-                    <div style="padding-top: 20px"><input style="padding: 5px 11px" type="submit" value="Добавить!"/></div>
                 </div>
 
-            </form>
-        </div>
-
-
-
-        <div>
-            <div th:each="goods : ${goodsForModal}" style="display: flex; justify-content: start;">
-                <div class="itemOfGood" th:each="good : ${goods}" >
-                    <div class="box" style="width: 100%">
-                        <a th:href="@{/{id}(id=${good.getId()})}"><img class="itemOfGood" th:src="*{'data:image/jpeg;base64,'+{good.nameImg}}"></a>
+                <div class="adminAddForm">
+                    <label class="form" for="price">Ціна:</label>
+                    <div>
+                        <input class="form" th:field="*{price}" style="padding: 0" type="text" id="price">
+                        <h2 style="color: red; width: 80%;" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Name Error</h2>
                     </div>
-                    <div style="padding: 5px 10%">
-                        <a th:href="@{/{id}(id=${good.getId()})}"><h1 style="word-wrap: break-word; word-break: break-all; height: 45px; text-overflow: ellipsis; overflow: hidden" th:text="${good.getName()}"></h1></a>
-                        <h2 th:text="'Price: ' +  ${good.getPrice()} + '$'" style="color: #151715;word-wrap: break-word; word-break: break-all;"></h2>
-                        <form style="display: flex; justify-content: center;  margin-top: 5px" th:method="DELETE" th:action="@{/adminpanel/{id}(id=${good.getId()})}">
-                            <input style="padding: 2px 14px; color:white; background: red" type="submit" value="DELETE"/>
-                        </form>
+                </div>
+
+                <div class="adminAddForm">
+                    <label class="form" for="desc">Опис:</label>
+                    <div>
+                        <input class="form" th:field="*{description}" style="padding: 0" type="text" id="desc">
+                        <h2 style="color: red; width: 80%;" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Name Error</h2>
                     </div>
+
+                </div>
+                <div style="display: flex; flex-direction: column">
+                    <label class="form" for="desc">Категорія:</label>
+                    <select style="font-size: 15px;" th:name="category">
+                        <option th:each="productCategory : ${allCategory}" th:text="${productCategory}"></option>
+                    </select>
+                </div>
+                <div class="adminAddForm">
+                    <label class="form" for="image">Фото: </label>
+                    <input class="form" type="file" name="file" id="image" value="upload" accept="image/png, image/jpeg" />
+                </div>
+                <div style="padding-top: 20px"><input style="padding: 5px 11px" type="submit" value="Добавить!"/></div>
+            </div>
+
+        </form>
+    </div>
+
+
+
+    <div>
+        <div th:each="goods : ${goodsForModal}" style="display: flex; justify-content: start;">
+            <div class="itemOfGood" th:each="good : ${goods}" >
+                <div class="box" style="width: 100%">
+                    <a th:href="@{/{id}(id=${good.getId()})}"><img class="itemOfGood" th:src="*{'data:image/jpeg;base64,'+{good.nameImg}}"></a>
+                </div>
+                <div style="padding: 5px 10%">
+                    <a th:href="@{/{id}(id=${good.getId()})}"><h1 style="word-wrap: break-word; word-break: break-all; height: 45px; text-overflow: ellipsis; overflow: hidden" th:text="${good.getName()}"></h1></a>
+                    <h2 th:text="'Price: ' +  ${good.getPrice()} + '$'" style="color: #151715;word-wrap: break-word; word-break: break-all;"></h2>
+                    <form style="display: flex; justify-content: center;  margin-top: 5px" th:method="DELETE" th:action="@{/adminpanel/{id}(id=${good.getId()})}">
+                        <input style="padding: 2px 14px; color:white; background: red" type="submit" value="DELETE"/>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="footer">
-        <a th:href="@{/}" class="footer-link" style="margin-left: 60px">BestShopOnline!</a>
-        <div style="display: flex">
-            <a th:href="@{/}" class="footer-link">Відгуки</a>
-            <a th:href="@{/}" class="footer-link">Запитання</a>
-        </div>
-        <div style="display: flex;">
-            <a th:href="@{/}" class="footer-link">Адміністрація</a>
-        </div>
-    </div>
+<div th:replace="~{fragments/navbar :: footer}">Footer</div>
 
 </body>
 </html>
