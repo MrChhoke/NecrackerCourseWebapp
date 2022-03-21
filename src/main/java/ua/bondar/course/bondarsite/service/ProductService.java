@@ -1,5 +1,6 @@
 package ua.bondar.course.bondarsite.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,8 @@ import ua.bondar.course.bondarsite.repo.ProductRepository;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ProductService {
-
-    private final static Logger logger = LogManager.getLogger(ProductService.class);
 
     @Autowired
     private ProductRepository productRepository;
@@ -27,7 +27,7 @@ public class ProductService {
     }
 
     public Product addProductForFirstTime(Product product){
-        logger.info("Був доданий продукт: " + product.getName());
+        log.info("Був доданий продукт: " + product.getName());
         return productRepository.saveAndFlush(product);
     }
 
@@ -38,7 +38,7 @@ public class ProductService {
     public Product deleteById(Long id){
         Product product = productRepository.findProductById(id);
         product.setActive(false);
-        logger.info("Замовлення №" + id + " виконано адмністратором");
+        log.info("Замовлення №" + id + " було видалено адмністратором");
         return productRepository.saveAndFlush(product);
     }
 }

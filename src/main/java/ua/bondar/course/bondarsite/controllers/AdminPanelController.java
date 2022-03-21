@@ -20,6 +20,8 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -36,13 +38,13 @@ public class AdminPanelController {
     @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
     @GetMapping("/adminpanel")
     public String adminPanel(@AuthenticationPrincipal UserOfShop user,
-                             @ModelAttribute("formproduct") Product product, Model model){
+                             @ModelAttribute("formproduct") Product product, Model model) {
         List<List<Product>> goodsForModal = positionForModel();
         List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
         model.addAttribute("goodsForModal", goodsForModal);
         model.addAttribute("allCategory", allCategory);
 
-        if(user != null){
+        if (user != null) {
             model.addAttribute("user", user.getUsername());
             return "adminPanel";
         }
@@ -52,7 +54,7 @@ public class AdminPanelController {
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
     @DeleteMapping("/adminpanel/{id}")
-    public String deleteInAdminPanel(Model model, @PathVariable(name = "id") Long id){
+    public String deleteInAdminPanel(Model model, @PathVariable(name = "id") Long id) {
         productService.deleteById(id);
         return "redirect:/adminpanel";
     }
@@ -67,7 +69,7 @@ public class AdminPanelController {
 
         model.addAttribute("user", user.getUsername());
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             List<List<Product>> goodsForModal = positionForModel();
             List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
             model.addAttribute("goodsForModal", goodsForModal);
@@ -77,26 +79,26 @@ public class AdminPanelController {
         if (category == null) category = CategoryProduct.getAllCategoryProductInString().get(1);
         product.setCategory(CategoryProduct.getCategoryProduct(category));
 
-        if(file.isEmpty()){
-            File fileChange = new File("src\\main\\resources\\static\\img\\defaulIcon.png");
+        if (file.isEmpty()) {
+            File fileChange = new File(Paths.get("src/main/resources/static/img/defaulIcon.png").toAbsolutePath().toString());
             try(FileInputStream fileInputStream = new FileInputStream(fileChange)){
                 product.setNameImg(Base64.getEncoder().encodeToString(fileInputStream.readAllBytes()));
             }
-        }else{
+        } else {
             product.setNameImg(Base64.getEncoder().encodeToString(file.getBytes()));
         }
         productService.addProductForFirstTime(product);
         return "redirect:/adminpanel";
     }
 
-    private List<List<Product>> positionForModel(){
-        List<Product> goods =  productService.getAllProduct();
+    private List<List<Product>> positionForModel() {
+        List<Product> goods = productService.getAllProduct();
         List<List<Product>> goodsForModal = new ArrayList<>();
         int index = 0;
-        for(int i = 0; i < goods.size(); i += COUNT_GOODS_IN_PAGE){
+        for (int i = 0; i < goods.size(); i += COUNT_GOODS_IN_PAGE) {
             goodsForModal.add(new ArrayList<>());
-            for(int j = 0; j < COUNT_GOODS_IN_PAGE && i+j < goods.size(); j++){
-                goodsForModal.get(index).add(goods.get(i+j));
+            for (int j = 0; j < COUNT_GOODS_IN_PAGE && i + j < goods.size(); j++) {
+                goodsForModal.get(index).add(goods.get(i + j));
             }
             index++;
         }
