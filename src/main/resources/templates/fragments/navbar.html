@@ -23,11 +23,18 @@
                 <a th:href="@{/registration}"><button type="button" class="btn btn-warning">Регістрація</button></a>
             </div>
             <div class="text-end" style="display: flex; justify-content: center; flex-wrap: wrap" th:if="${user != null}">
-                <a th:href="@{/shoppingCart}"><button type="button" class="btn btn-outline-light me-2">Корзина</button></a>
-                <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/adminpanel}"><button type="button" class="btn btn-outline-light me-2">Управління</button></a>
-                <a th:href="@{/profile}"><button type="button" class="btn btn-outline-light me-2" th:text="${user.getUsername()}"></button></a>
-                <form id="form2" th:action="@{/logout}" method="post"></form>
-                <button form="form2" type="submit" class="btn btn-warning">Вихід</button>
+                <div class="btn-group">
+                    <button th:text="${user.getUsername()}" class="btn btn-outline-light me-2 dropdown-toggle" type="button" id="defaultDropdown" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">
+                        Default dropdown
+                    </button>
+                    <form id="form2" th:action="@{/logout}" method="post"></form>
+                    <ul class="dropdown-menu" aria-labelledby="defaultDropdown">
+                        <li><a class="dropdown-item" th:href="@{/profile}">Мій профіль</a></li>
+                        <li><a class="dropdown-item" sec:authorize="hasAuthority('ADMIN')" th:href="@{/adminpanel}">Управління</a></li>
+                        <li><a class="dropdown-item" th:href="@{/shoppingCart}">Корзина</a></li>
+                        <li><a class="dropdown-item" href="javascript:{}" onclick="document.getElementById('form2').submit(); return false;">Вихід</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
