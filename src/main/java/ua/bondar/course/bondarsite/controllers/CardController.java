@@ -26,18 +26,17 @@ public class CardController {
 
     @PostMapping("/addToCart/{id}")
     public String addToCart(HttpSession httpSession, Model model,
-                            @RequestParam("amount") int amount,
+                            @RequestParam("quantity") int quantity,
                             @PathVariable(name = "id") Long id){
         String tokenSession = (String) httpSession.getAttribute("sessionToken");
         if(tokenSession == null){
             tokenSession = UUID.randomUUID().toString();
             httpSession.setAttribute("sessionToken", tokenSession);
-            shoppingCartService.addShoppingCartFirstTime(id,tokenSession, amount);
+            shoppingCartService.addShoppingCartFirstTime(id,tokenSession, quantity);
             return "redirect:/";
         }
 
-        shoppingCartService.addToExistingShoppingCart(id,tokenSession,amount);
-
+        shoppingCartService.addToExistingShoppingCart(id,tokenSession,quantity);
         return "redirect:/";
     }
 

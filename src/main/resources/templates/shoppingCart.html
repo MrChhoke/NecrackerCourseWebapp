@@ -2,45 +2,143 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Shopping cart</title>
+    <title>Корзина</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
     <link href="../static/css/style.css" rel="stylesheet"/>
-    <link rel="icon" href="https://igorzuevich.com/wp-content/uploads/2016/01/shop-icon.png">
+    <style>
+        .container_content {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+    </style>
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: header}">Header</div>
 
-<div th:if="${shoppingCart.getItems().size() == 0}" class="container"
-     style="margin-top: 50px; justify-content: center; align-items: center;">
-    <h1 style="font-size: 50px">Корзина замовлень порожня!</h1>
+<div th:if="${shoppingCart.getItems().size() == 0}" class="container_content" style="justify-content: center">
+    <h1 style="font-size: 50px; text-align: center">Корзина замовлень порожня!</h1>
 </div>
 
-<div th:if="${shoppingCart.getItems().size() != 0}" class="container" style="margin-top: 50px">
-    <a th:href="@{/clearShoppingCart}"><h1>Очистити корзину</h1></a>
-    <div th:each="cartItem : ${shoppingCart.getItems()}"
-         style="display: flex; justify-content: flex-start; align-items: center">
-        <a style="padding-right: 40px;" th:href="@{/{id}(id=${cartItem.getProduct().getId()})}"><img
-                style="max-height: 180px" th:src="*{'data:image/jpeg;base64,'+{cartItem.getProduct().nameImg}}"></a>
-        <a th:href="@{/{id}(id=${cartItem.getProduct().getId()})}" th:text="${cartItem.getProduct().getName()}"
-           style="color: red; padding-right: 40px;">Link</a>
-        <form th:method="POST" th:action="@{/updateShoppingCart}">
-            <input type="hidden" th:value="${cartItem.getId()}" name="item_id">
-            <input style="margin-right: 20px" type="number" name="amount" th:value="${cartItem.getAmount()}"/>
-            <input style="margin-right: 20px" type="submit" value="OK!">
-        </form>
-        <a th:href="@{/removeItem/{id}(id = ${cartItem.getId()})}"><h2 style="padding-right: 40px;">Delete</h2></a>
-        <h2 style="margin-right: 10px">Price: </h2>
-        <h2 th:text="${cartItem.getAmount() * cartItem.getProduct().getPrice()}"></h2>
-    </div>
-    <div style="display: flex; justify-content: flex-end">
-        <h1>Total price: </h1>
-        <h1 th:text="${shoppingCart.getTotalPrice()}" style="padding-right: 20px"></h1>
-        <form th:action="@{/buyShoppingCart}" th:method="GET">
-            <input type="text" name="location" placeholder="Місце доставки"/>
-            <input type="submit" value="Замовити"/>
-        </form>
+<!--<div th:if="${shoppingCart.getItems().size() != 0}" class="container" style="margin-top: 50px">-->
+<!--    <a th:href="@{/clearShoppingCart}"><h1>Очистити корзину</h1></a>-->
+<!--    <div th:each="cartItem : ${shoppingCart.getItems()}"-->
+<!--         style="display: flex; justify-content: flex-start; align-items: center">-->
+<!--        <a style="padding-right: 40px;" th:href="@{/{id}(id=${cartItem.getProduct().getId()})}"><img-->
+<!--                style="max-height: 180px" th:src="*{'data:image/jpeg;base64,'+{cartItem.getProduct().nameImg}}"></a>-->
+<!--        <a th:href="@{/{id}(id=${cartItem.getProduct().getId()})}" th:text="${cartItem.getProduct().getName()}"-->
+<!--           style="color: red; padding-right: 40px;">Link</a>-->
+<!--        <form th:method="POST" th:action="@{/updateShoppingCart}">-->
+<!--            <input type="hidden" th:value="${cartItem.getId()}" name="item_id">-->
+<!--            <input style="margin-right: 20px" type="number" name="amount" th:value="${cartItem.getAmount()}"/>-->
+<!--            <input style="margin-right: 20px" type="submit" value="OK!">-->
+<!--        </form>-->
+<!--        <a th:href="@{/removeItem/{id}(id = ${cartItem.getId()})}"><h2 style="padding-right: 40px;">Delete</h2></a>-->
+<!--        <h2 style="margin-right: 10px">Price: </h2>-->
+<!--        <h2 th:text="${cartItem.getAmount() * cartItem.getProduct().getPrice()}"></h2>-->
+<!--    </div>-->
+<!--    <div style="display: flex; justify-content: flex-end">-->
+<!--        <h1>Total price: </h1>-->
+<!--        <h1 th:text="${shoppingCart.getTotalPrice()}" style="padding-right: 20px"></h1>-->
+<!--        <form th:action="@{/buyShoppingCart}" th:method="GET">-->
+<!--            <input type="text" name="location" placeholder="Місце доставки"/>-->
+<!--            <input type="submit" value="Замовити"/>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</div>-->
+<div class="container_content" th:if="${shoppingCart.getItems().size() > 0}">
+    <table class="table" style="width: 80%; margin: 0 auto">
+        <thead>
+        <tr>
+            <th scope="col">Назва</th>
+            <th scope="col">Кількість</th>
+            <th scope="col">Ціна</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cartItem : ${shoppingCart.getItems()}">
+            <td><a th:href="@{/{id}(id = ${cartItem.getProduct().getId()})}">
+                <div th:text="${cartItem.getProduct().getName()}">Name</div>
+            </a></td>
+            <td th:text="${cartItem.getAmount()}">Quantity</td>
+            <td th:text="${cartItem.getAmount() * cartItem.getProduct().getPrice()}">Price</td>
+            <td>
+                <div class="mb-3">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-pencil"
+                             viewBox="0 0 16 16">
+                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                ...
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div style="display: flex;justify-content: flex-end; padding: 10px 20px 0 0;">
+        <div style="padding-right: 10px">
+            <button type="button" data-bs-toggle="modal" data-bs-target="#order" class="btn btn-warning">Замовити
+            </button>
+            <div class="modal fade" id="order" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="orderModel">Замовлення</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/buyShoppingCart}" th:method="GET" id="formOrder" class="form-inline">
+                                <div class="form-group mx-sm-3 mb-2">
+                                    <label class="sr-only">Місце доставки</label>
+                                    <input type="text" class="form-control" name="location" placeholder="Населений пункт">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                            <button type="submit" form="formOrder" class="btn btn btn-success">Замовити</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <a th:href="@{/clearShoppingCart}">
+            <button type="button" class="btn btn-danger">Очистити корзину</button>
+        </a>
     </div>
 </div>
 
-<div th:replace="~{fragments/navbar :: footer}">Footer</div>
 </body>
 </html>
