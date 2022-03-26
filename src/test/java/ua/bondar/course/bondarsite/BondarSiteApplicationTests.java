@@ -9,7 +9,7 @@ class BondarSiteApplicationTests {
 
     @Test
     void contextLoads() {
-        System.out.println(ExchangeClient.getCurrency());
+
     }
 
 }

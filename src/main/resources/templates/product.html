@@ -82,12 +82,13 @@
                     Категорія</h2>
             </div>
             <form th:action="@{/addToCart/{id}(id = ${product.getId()})}" method="POST">
-            <span>
+            <span  th:with="currency=${T(Math).round(T(ua.bondar.course.bondarsite.dto.ExchangeDTO).exchangeUSDforUAH(product.getPrice()))}">
                     <p>Ціна:
                         <span class="emphasize" th:text="'$' + ${product.getPrice()}">$19.99</span>
+                    </p>
+                    <p th:if="${currency != -1}">Ціна:
                         <span class="emphasize"
-                              th:if="${T(ua.bondar.course.bondarsite.dto.ExchangeClient).getCurrency() != null}"
-                              th:text="'₴' + ${T(Math).round(T(ua.bondar.course.bondarsite.dto.ExchangeDTO).exchangeUSDforUAH(product.getPrice()))}">$19.99</span>
+                              th:text="'₴' + ${currency}">$19.99</span>
                     </p>
                     <div th:if="${product.getActive()}">
                         <label>Кількість:</label>
