@@ -20,7 +20,7 @@ public class ProfileController {
 
     @GetMapping("/profile")
     public String profile(@AuthenticationPrincipal UserOfShop user, Model model){
-        model.addAttribute("user", user.getUsername());
+        model.addAttribute("user", user);
         model.addAttribute("allListProduct", shoppingCartService.getShoppingCartsByActive(true));
         model.addAttribute("historyOrder", shoppingCartService.getHistoryOfUser(user.getUsername()));
         return "profile";

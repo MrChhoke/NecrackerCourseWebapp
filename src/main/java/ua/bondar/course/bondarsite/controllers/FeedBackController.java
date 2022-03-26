@@ -23,12 +23,9 @@ public class FeedBackController {
     @GetMapping("/feedback")
     public String feedBackPage(@AuthenticationPrincipal UserOfShop user,
                                @ModelAttribute("feedbackForm") @Valid FeedBack feedBack, Model model){
-        if(user != null){
-            model.addAttribute("user", user.getUsername());
-            feedBack.setUserOfShop(user);
-        }else{
-            model.addAttribute("user", "anom1");
-        }
+
+        model.addAttribute("user", user);
+        feedBack.setUserOfShop(user);
         model.addAttribute("feedBackList", feedBackService.getAllFeedBack());
         return "feedback";
     }
@@ -37,11 +34,8 @@ public class FeedBackController {
     public String setFeedBack(@AuthenticationPrincipal UserOfShop user,
                               @ModelAttribute("feedbackForm") @Valid FeedBack feedBack,
                               BindingResult bindingResult, Model model){
-        if(user != null){
-            model.addAttribute("user", user.getUsername());
-        }else{
-            model.addAttribute("user", "anom1");
-        }
+
+        model.addAttribute("user", user);
 
         if(bindingResult.hasErrors()){
             model.addAttribute("feedBackList", feedBackService.getAllFeedBack());

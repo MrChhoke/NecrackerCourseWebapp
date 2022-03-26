@@ -42,11 +42,7 @@ public class AdminPanelController {
         List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
         model.addAttribute("allCategory", allCategory);
 
-        if (user != null) {
-            model.addAttribute("user", user.getUsername());
-            return "adminPanel";
-        }
-        model.addAttribute("user", "anom1");
+        model.addAttribute("user", user);
         return "adminPanel";
     }
 
@@ -65,7 +61,7 @@ public class AdminPanelController {
                                 @RequestParam(value = "file", required = false) MultipartFile file,
                                 @RequestParam(value = "category", required = false) String category) throws IOException {
 
-        model.addAttribute("user", user.getUsername());
+        model.addAttribute("user", user);
 
         if (bindingResult.hasErrors()) {
             List<String> allCategory = CategoryProduct.getAllCategoryProductInString();

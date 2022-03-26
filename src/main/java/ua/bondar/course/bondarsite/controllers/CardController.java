@@ -42,12 +42,8 @@ public class CardController {
 
     @GetMapping("/shoppingCart")
     public String shoppingCart(@AuthenticationPrincipal UserOfShop user, HttpServletRequest request, Model model){
-        if(user != null){
-            model.addAttribute("user", user.getUsername());
-        }else{
-            model.addAttribute("user", "anom1");
-        }
 
+        model.addAttribute("user", user);
         String sessionToken = (String) request.getSession(true).getAttribute("sessionToken");
         if(sessionToken == null){
             model.addAttribute("shoppingCart", new ShoppingCart());
@@ -62,13 +58,7 @@ public class CardController {
     @PostMapping("/updateShoppingCart")
     public String updateCartItem(@AuthenticationPrincipal UserOfShop user, HttpServletRequest request, Model model,
                                  @RequestParam("item_id") Long id, @RequestParam("amount") int amount){
-        if(user != null){
-            model.addAttribute("user", user.getUsername());
-        }else{
-            model.addAttribute("user", "anom1");
-        }
-
-
+        model.addAttribute("user", user);
         shoppingCartService.updateShoppingCartItem(id, amount);
         return "redirect:/shoppingCart";
     }
@@ -92,12 +82,8 @@ public class CardController {
     public String buyShoppingCart(@AuthenticationPrincipal UserOfShop user,
                                   Model model,
                                   HttpServletRequest request, @RequestParam("location") String location){
-        if(user != null){
-            model.addAttribute("user", user.getUsername());
-        }else{
-            model.addAttribute("user", "anom1");
-        }
 
+        model.addAttribute("user", user);
         String sessionToken = (String) request.getSession(false).getAttribute("sessionToken");
         request.getSession(false).removeAttribute("sessionToken");
         if(user != null) {

@@ -13,19 +13,19 @@
                 <li><a href="#" class="nav-link px-2 text-white">About</a></li>
             </ul>
 
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-                <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
+            <form th:action="@{/}" th:method="GET" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+                <input name="search" type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
             </form>
 
-            <div class="text-end" style="display: flex; justify-content: center; flex-wrap: wrap" th:if="${user == 'anom1'}">
+            <div class="text-end" style="display: flex; justify-content: center; flex-wrap: wrap" th:if="${user == null}">
                 <a th:href="@{/shoppingCart}"><button type="button" class="btn btn-outline-light me-2">Корзина</button></a>
                 <a th:href="@{/login}"><button type="button" class="btn btn-outline-light me-2">Авторизація</button></a>
                 <a th:href="@{/registration}"><button type="button" class="btn btn-warning">Регістрація</button></a>
             </div>
-            <div class="text-end" style="display: flex; justify-content: center; flex-wrap: wrap" th:if="${user != 'anom1'}">
+            <div class="text-end" style="display: flex; justify-content: center; flex-wrap: wrap" th:if="${user != null}">
                 <a th:href="@{/shoppingCart}"><button type="button" class="btn btn-outline-light me-2">Корзина</button></a>
                 <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/adminpanel}"><button type="button" class="btn btn-outline-light me-2">Управління</button></a>
-                <a th:href="@{/profile}"><button type="button" class="btn btn-outline-light me-2" th:text="${user}"></button></a>
+                <a th:href="@{/profile}"><button type="button" class="btn btn-outline-light me-2" th:text="${user.getUsername()}"></button></a>
                 <form id="form2" th:action="@{/logout}" method="post"></form>
                 <button form="form2" type="submit" class="btn btn-warning">Вихід</button>
             </div>

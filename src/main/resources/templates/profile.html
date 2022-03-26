@@ -72,7 +72,7 @@
                                     <h1 style="padding-right: 20px">BuyerName: </h1>
                                     <h1 th:text="' ' + ${listProduct.getBuyerName()}" style="padding-right: 20px"></h1>
                                 </div>
-                                <form th:if="${user != 'anom1'}"
+                                <form th:if="${user != null}"
                                       th:action="@{/profile/doneOrder/{id}(id = ${listProduct.getId()}) }"
                                       th:method="DELETE">
                                     <input class="header-link" style="border: 0 solid black;" type="submit"

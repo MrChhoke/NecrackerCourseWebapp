@@ -33,14 +33,6 @@ public class LoginController {
 
     @PostMapping("/registration")
     public String processUser(RegisterForm form){
-        /*
-        * anom1 - це недоступне ім'я для юзера!
-        */
-        if(form.getUsername().equals("anom1")){
-            log.error("Спроба створити забороненого юзера!");
-            return "registration";
-        }
-
         log.info("Створено юзера: " + form.getUsername());
         userRepo.save(form.toUser(passwordEncoder));
         return "redirect:/login";
