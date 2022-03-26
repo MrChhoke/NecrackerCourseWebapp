@@ -30,8 +30,6 @@ import java.util.List;
 @Slf4j
 public class AdminPanelController {
 
-    private final static int COUNT_GOODS_IN_PAGE = 5;
-
     @Autowired
     private ProductService productService;
 
