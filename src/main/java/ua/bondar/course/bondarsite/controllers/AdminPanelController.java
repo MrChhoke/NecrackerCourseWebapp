@@ -39,9 +39,7 @@ public class AdminPanelController {
     @GetMapping("/adminpanel")
     public String adminPanel(@AuthenticationPrincipal UserOfShop user,
                              @ModelAttribute("formproduct") Product product, Model model) {
-        List<List<Product>> goodsForModal = positionForModel();
         List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
-        model.addAttribute("goodsForModal", goodsForModal);
         model.addAttribute("allCategory", allCategory);
 
         if (user != null) {
@@ -70,9 +68,7 @@ public class AdminPanelController {
         model.addAttribute("user", user.getUsername());
 
         if (bindingResult.hasErrors()) {
-            List<List<Product>> goodsForModal = positionForModel();
             List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
-            model.addAttribute("goodsForModal", goodsForModal);
             model.addAttribute("allCategory", allCategory);
             return "adminPanel";
         }
@@ -91,17 +87,4 @@ public class AdminPanelController {
         return "redirect:/adminpanel";
     }
 
-    private List<List<Product>> positionForModel() {
-        List<Product> goods = productService.getAllProduct();
-        List<List<Product>> goodsForModal = new ArrayList<>();
-        int index = 0;
-        for (int i = 0; i < goods.size(); i += COUNT_GOODS_IN_PAGE) {
-            goodsForModal.add(new ArrayList<>());
-            for (int j = 0; j < COUNT_GOODS_IN_PAGE && i + j < goods.size(); j++) {
-                goodsForModal.get(index).add(goods.get(i + j));
-            }
-            index++;
-        }
-        return goodsForModal;
-    }
 }
