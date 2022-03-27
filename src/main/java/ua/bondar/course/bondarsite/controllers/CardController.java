@@ -56,10 +56,10 @@ public class CardController {
     }
 
     @PostMapping("/updateShoppingCart")
-    public String updateCartItem(@AuthenticationPrincipal UserOfShop user, HttpServletRequest request, Model model,
-                                 @RequestParam("item_id") Long id, @RequestParam("amount") int amount){
+    public String updateCartItem(@AuthenticationPrincipal UserOfShop user, Model model,
+                                 @RequestParam("item_id") Long id, @RequestParam("quantity2") int quantity){
         model.addAttribute("user", user);
-        shoppingCartService.updateShoppingCartItem(id, amount);
+        shoppingCartService.updateShoppingCartItem(id, quantity);
         return "redirect:/shoppingCart";
     }
 

@@ -13,10 +13,11 @@
     <link href="../static/css/style.css" rel="stylesheet"/>
     <style>
         .container_content {
-            margin-top: 15px;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            max-width: 1100px;
+            margin: 0 auto;
         }
     </style>
 </head>
@@ -54,89 +55,108 @@
 <!--    </div>-->
 <!--</div>-->
 <div class="container_content" th:if="${shoppingCart.getItems().size() > 0}">
-    <table class="table" style="width: 80%; margin: 0 auto">
-        <thead>
-        <tr>
-            <th scope="col">Назва</th>
-            <th scope="col">Кількість</th>
-            <th scope="col">Ціна</th>
-            <th scope="col"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="cartItem : ${shoppingCart.getItems()}">
-            <td><a th:href="@{/{id}(id = ${cartItem.getProduct().getId()})}">
-                <div th:text="${cartItem.getProduct().getName()}">Name</div>
-            </a></td>
-            <td th:text="${cartItem.getAmount()}">Quantity</td>
-            <td th:text="${cartItem.getAmount() * cartItem.getProduct().getPrice()}">Price</td>
-            <td>
-                <div class="mb-3">
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-success">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-pencil"
-                             viewBox="0 0 16 16">
-                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"></path>
-                        </svg>
-                    </button>
-                </div>
+    <div>
+        <table class="table" style="width: 80%; margin: 0 auto">
+            <thead>
+            <tr>
+                <th scope="col">Назва</th>
+                <th scope="col">Кількість</th>
+                <th scope="col">Ціна</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="cartItem : ${shoppingCart.getItems()}">
+                <td><a th:href="@{/{id}(id = ${cartItem.getProduct().getId()})}">
+                    <div th:text="${cartItem.getProduct().getName()}">Name</div>
+                </a></td>
+                <td th:text="${cartItem.getAmount()}">Quantity</td>
+                <td th:text="'$' + ${cartItem.getAmount() * cartItem.getProduct().getPrice()}">Price</td>
+                <td>
+                    <div class="mb-3">
+                        <button type="button" data-bs-toggle="modal" tabindex="-1" th:data-bs-target="'#id' + ${cartItem.getId()}"
+                                class="btn btn-success">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white"
+                                 class="bi bi-pencil"
+                                 viewBox="0 0 16 16">
+                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"></path>
+                            </svg>
+                        </button>
+                    </div>
 
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    <div class="modal fade" th:id="'id' + ${cartItem.getId()}" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" th:id="'modal_id_' + ${cartItem.getId()}" th:text="${cartItem.getProduct().getName()}"></h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form th:method="POST" th:action="updateShoppingCart" th:id="'form_id_card' + ${cartItem.getId()}">
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Кількість</label>
+                                            <input type="hidden" th:value="${cartItem.getId()}" name="item_id">
+                                            <div class="col-sm-10">
+                                                <input type="number" name="quantity2" class="form-control" th:value="${cartItem.getAmount()}" aria-describedby="emailHelp" placeholder="шт">
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="container_content" style="margin-top: 10px">
+                                        <form class="container_content" th:method="GET" th:action="@{/removeItem/{id}(id = ${cartItem.getId()})}">
+                                            <button type="submit" class="btn btn-danger btn-lg btn-block">Видалити з кошику</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити
+                                    </button>
+                                    <button type="submit" th:form="'form_id_card' + ${cartItem.getId()}" class="btn btn-primary">Зберегти зміни</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div style="display: flex;justify-content: flex-end; padding: 10px 20px 0 0;">
+            <div style="padding-right: 10px">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#order" class="btn btn-warning">Замовити
+                </button>
+                <div class="modal fade" id="order" tabindex="-1" aria-labelledby="exampleModalLabel"
                      aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <h5 class="modal-title" id="orderModel">Замовлення</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                ...
+                                <form th:action="@{/buyShoppingCart}" th:method="GET" id="formOrder"
+                                      class="form-inline">
+                                    <div class="form-group mx-sm-3 mb-2">
+                                        <label class="sr-only">Місце доставки</label>
+                                        <input type="text" class="form-control" name="location"
+                                               placeholder="Населений пункт">
+                                    </div>
+                                </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                                <button type="submit" form="formOrder" class="btn btn btn-success">Замовити</button>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <div style="display: flex;justify-content: flex-end; padding: 10px 20px 0 0;">
-        <div style="padding-right: 10px">
-            <button type="button" data-bs-toggle="modal" data-bs-target="#order" class="btn btn-warning">Замовити
-            </button>
-            <div class="modal fade" id="order" tabindex="-1" aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="orderModel">Замовлення</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form th:action="@{/buyShoppingCart}" th:method="GET" id="formOrder" class="form-inline">
-                                <div class="form-group mx-sm-3 mb-2">
-                                    <label class="sr-only">Місце доставки</label>
-                                    <input type="text" class="form-control" name="location" placeholder="Населений пункт">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
-                            <button type="submit" form="formOrder" class="btn btn btn-success">Замовити</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <a th:href="@{/clearShoppingCart}">
-            <button type="button" class="btn btn-danger">Очистити корзину</button>
-        </a>
+            <a th:href="@{/clearShoppingCart}">
+                <button type="button" class="btn btn-danger">Очистити корзину</button>
+            </a>
+        </div>
     </div>
 </div>
 

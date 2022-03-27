@@ -4,7 +4,6 @@ package ua.bondar.course.bondarsite.dto;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -33,8 +32,6 @@ public class ExchangeClient {
 
     public static CurrencyList getCurrency() {
         try {
-            System.out.println(url);
-            System.out.println(timeoutConnectionMilliseconds);
             SimpleClientHttpRequestFactory clientHttpRequestFactory
                     = new SimpleClientHttpRequestFactory();
             clientHttpRequestFactory.setConnectTimeout(timeoutConnectionMilliseconds);

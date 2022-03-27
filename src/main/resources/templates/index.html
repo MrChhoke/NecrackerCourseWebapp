@@ -28,10 +28,10 @@
             <p class="card-text clip" th:text="${product.getDescription()}">The descrition</p>
         </div>
         <div class="card-footer" style="display: flex; justify-content: flex-end">
-            <form th:action="@{/addToCart/{id}(id = ${product.getId()})}" method="post" hidden id="form1">
-                <input class="form" type="number" value="1" name="amount"/>
+            <form th:action="@{/addToCart/{id}(id = ${product.getId()})}" method="POST">
+                <input hidden type="number" name="quantity" th:value="1">
+                <button type="submit" class="btn btn-success">Купить</button>
             </form>
-            <button type="submit" form="form1" class="btn btn-success">Купить</button>
         </div>
     </div>
 </div>
