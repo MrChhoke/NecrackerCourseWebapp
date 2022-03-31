@@ -16,16 +16,16 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min = 3, max = 30, message = "Имя должно быть между 3 и 30 символами!")
+    @Size(min = 3, max = 30, message = "Ім'я має містити від 3 до 30 символів")
     private String name;
 
-    @Size(min = 10, max = 300, message = "Описание должно быть между 10 и 300 символами!")
+    @Size(min = 10, max = 300, message = "Опис має містити від 10 до 300 символів")
     private String description;
 
     @Enumerated(EnumType.STRING)
     private CategoryProduct category;
 
-    @Min(message = "Цена должна быть больше 1", value = 1)
+    @Min(message = "Ціна повинна бути більше 1", value = 1)
     private double price;
 
     @Column(columnDefinition = "TEXT")
