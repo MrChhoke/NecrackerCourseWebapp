@@ -124,6 +124,10 @@ public class ShoppingCartService {
         return shoppingCartRepository.findShoppingCartByBuyerNameAndCompliedOrder(username,true);
     }
 
+    public List<ShoppingCart> getFullHistoryOrderHistory(){
+        return shoppingCartRepository.findShoppingCartByCompliedOrder(true);
+    }
+
 
     public void deleteTheExecutedOrderById(Long id){
         shoppingCartRepository.deleteById(id);

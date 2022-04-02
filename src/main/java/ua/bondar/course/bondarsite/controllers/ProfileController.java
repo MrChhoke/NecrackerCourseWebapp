@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import ua.bondar.course.bondarsite.model.Role;
 import ua.bondar.course.bondarsite.model.UserOfShop;
 import ua.bondar.course.bondarsite.service.ShoppingCartService;
 
@@ -23,6 +23,8 @@ public class ProfileController {
         model.addAttribute("user", user);
         model.addAttribute("allListProduct", shoppingCartService.getShoppingCartsByActive(true));
         model.addAttribute("historyOrder", shoppingCartService.getHistoryOfUser(user.getUsername()));
+        if(user.getRoles().stream().anyMatch(role -> role == Role.ADMIN))
+            model.addAttribute("fullHistoryOrder", shoppingCartService.getFullHistoryOrderHistory());
         return "profile";
     }
 

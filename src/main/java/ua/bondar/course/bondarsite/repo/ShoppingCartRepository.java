@@ -10,5 +10,6 @@ public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long
     List<ShoppingCart> findShoppingCartsByActive(Boolean active);
     List<ShoppingCart> findShoppingCartByBuyerNameAndCompliedOrder(String name, Boolean complied);
     ShoppingCart findShoppingCartById(Long id);
+    List<ShoppingCart> findShoppingCartByCompliedOrder(Boolean active);
     void deleteById(Long id);
 }
