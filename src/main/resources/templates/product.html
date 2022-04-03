@@ -23,120 +23,152 @@
 <div th:replace="~{fragments/navbar :: header}">Header</div>
 
 
-<!--<div class="container" style="margin-top: 60px">-->
-<!--    <div style="display: flex; justify-content: space-between">-->
-<!--        <div style="display: flex; justify-content: center; align-items: center; flex-direction: row;">-->
-<!--            <div style="padding: 0 5%"><img th:src="*{'data:image/jpeg;base64,'+{product.nameImg}}"-->
-<!--                                            style="height: 200px"></div>-->
-<!--            <div>-->
-<!--                <div th:text="${product.getName()}"-->
-<!--                     style="justify-content: center; margin: 0 auto; font-size: 50px; color: black">Static content-->
-<!--                </div>-->
-<!--                <div th:text="'Price: ' + ${product.getPrice()} + '$'" style="color: black; font-size: 35px;"></div>-->
-<!--                <div th:if="${T(ua.bondar.course.bondarsite.dto.ExchangeClient).getCurrency() != null}"-->
-<!--                     th:text="'Price: ' + ${T(Math).round(T(ua.bondar.course.bondarsite.dto.ExchangeDTO).exchangeUSDforUAH(product.getPrice()))} + '₴'"-->
-<!--                     style="color: black; font-size: 35px;"></div>-->
-<!--                <div th:text="'Category: ' + ${product.getCategory().getStringCategory()}"-->
-<!--                     style="color: black; font-size: 35px;"></div>-->
-<!--                <div th:text="'Description: ' +  ${product.getDescription()}"-->
-<!--                     style="color: black; font-size: 20px;"></div>-->
-<!--                <form th:if="${product.getActive() == true}" method="post"-->
-<!--                      th:action="@{/addToCart/{id}(id = ${product.getId()})}"-->
-<!--                      style="display: flex; justify-content: flex-end;">-->
-<!--                    <div style="padding-right: 50px">-->
-<!--                        <h2>Кількість:</h2>-->
-<!--                        <input class="form" type="number" value="1" name="amount">-->
-<!--                    </div>-->
-<!--                    <input type="submit" value="Замовити" style="width: 150px; background: yellowgreen; color: white">-->
-<!--                </form>-->
+<!--<div class="codepen-container" style="font-family: 'Verdana', sans-serif;">-->
+<!--    <div class="content-container">-->
+<!--        <div class="left-container">-->
+<!--            <div class="triangle-topleft" style="position: relative;">-->
+<!--                <div class="back-arrow" id="buy-toaster"></div>-->
 <!--            </div>-->
+<!--            <div class="product-image&#45;&#45;container">-->
+<!--                <img class="product-image&#45;&#45;featured" id="featured"-->
+<!--                     th:src="*{'data:image/jpeg;base64,'+ {product.nameImg}}"-->
+<!--                     src="http://ecx.images-amazon.com/images/I/71f3p1o62FL._SX522_.jpg" alt="toaster"/>-->
+<!--                <ul class="product-image&#45;&#45;list">-->
+<!--                    <li class="item-selected"><img th:src="*{'data:image/jpeg;base64,'+ {product.nameImg}}"-->
+<!--                                                   class="product-image&#45;&#45;item"/></li>-->
+<!--                    <li><img th:src="*{'data:image/jpeg;base64,'+ {product.nameImg}}" class="product-image&#45;&#45;item"/></li>-->
+<!--                    <li><img-->
+<!--                            src="https://imgv3.fotor.com/images/homepage-feature-card/Fotor-AI-photo-enhancement-tool-ru.jpg"-->
+<!--                            class="product-image&#45;&#45;item"/></li>-->
+<!--                    <li><img th:src="*{'data:image/jpeg;base64,'+ {product.nameImg}}" class="product-image&#45;&#45;item"/></li>-->
+<!--                    <li><img th:src="*{'data:image/jpeg;base64,'+ {product.nameImg}}" class="product-image&#45;&#45;item"/></li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="right-container">-->
+<!--            <div>-->
+<!--                <h1 class="title" th:text="${product.getName()}">Black & Decker</h1>-->
+<!--                <h2 class="subtitle subtitle-container" th:text="'Категорія: ' + ${product.getCategory()}">-->
+<!--                    Категорія</h2>-->
+<!--            </div>-->
+<!--            <form th:action="@{/addToCart/{id}(id = ${product.getId()})}" method="POST">-->
+<!--            <span  th:with="currency=${T(Math).round(T(ua.bondar.course.bondarsite.dto.ExchangeDTO).exchangeUSDforUAH(product.getPrice()))}">-->
+<!--                    <p>Ціна:-->
+<!--                        <span class="emphasize" th:text="'$' + ${product.getPrice()}">$19.99</span>-->
+<!--                    </p>-->
+<!--                    <p th:if="${currency != -1}">Ціна:-->
+<!--                        <span class="emphasize"-->
+<!--                              th:text="'₴' + ${currency}">$19.99</span>-->
+<!--                    </p>-->
+<!--                    <div th:if="${product.getActive()}">-->
+<!--                        <label>Кількість:</label>-->
+<!--                        <select name="quantity" class="select-dropdown">-->
+<!--                            <option value="1">1</option>-->
+<!--                            <option value="2">2</option>-->
+<!--                            <option value="3">3</option>-->
+<!--                            <option value="4">4</option>-->
+<!--                        </select>-->
+<!--                    </div>-->
+<!--                    <div th:if="${!product.getActive()}">-->
+<!--                        <label>Кількість: 0</label>-->
+<!--                    </div>-->
+<!--                </span>-->
+<!--                <div>-->
+<!--                    <h2 class="title">Product Description</h2>-->
+<!--                    <p th:text="${product.getDescription()}"></p>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <button th:if="${product.getActive()}" type="submit" class="my-btn flex-btn">-->
+<!--                        <span>-->
+<!--                            <img src="https://cdn1.iconfinder.com/data/icons/material-core/20/shopping-cart-128.png"-->
+<!--                                 class="cart-icon"/>-->
+<!--                        </span>-->
+<!--                        <span class="btn-text">Додати в кошик</span>-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--            </form>-->
 <!--        </div>-->
 <!--    </div>-->
 <!--</div>-->
 
-<div class="codepen-container" style="font-family: 'Verdana', sans-serif;">
-    <div class="content-container">
-        <div class="left-container">
-            <div class="triangle-topleft" style="position: relative;">
-                <div class="back-arrow" id="buy-toaster"></div>
-            </div>
-            <div class="product-image--container">
-                <img class="product-image--featured" id="featured"
-                     th:src="*{'data:image/jpeg;base64,'+ {product.nameImg}}"
-                     src="http://ecx.images-amazon.com/images/I/71f3p1o62FL._SX522_.jpg" alt="toaster"/>
-                <ul class="product-image--list">
-                    <li class="item-selected"><img th:src="*{'data:image/jpeg;base64,'+ {product.nameImg}}"
-                                                   class="product-image--item"/></li>
-                    <li><img th:src="*{'data:image/jpeg;base64,'+ {product.nameImg}}" class="product-image--item"/></li>
-                    <li><img
-                            src="https://imgv3.fotor.com/images/homepage-feature-card/Fotor-AI-photo-enhancement-tool-ru.jpg"
-                            class="product-image--item"/></li>
-                    <li><img th:src="*{'data:image/jpeg;base64,'+ {product.nameImg}}" class="product-image--item"/></li>
-                    <li><img th:src="*{'data:image/jpeg;base64,'+ {product.nameImg}}" class="product-image--item"/></li>
-                </ul>
-            </div>
-        </div>
-        <div class="right-container">
-            <div>
-                <h1 class="title" th:text="${product.getName()}">Black & Decker</h1>
-                <h2 class="subtitle subtitle-container" th:text="'Категорія: ' + ${product.getCategory()}">
-                    Категорія</h2>
-            </div>
-            <form th:action="@{/addToCart/{id}(id = ${product.getId()})}" method="POST">
-            <span  th:with="currency=${T(Math).round(T(ua.bondar.course.bondarsite.dto.ExchangeDTO).exchangeUSDforUAH(product.getPrice()))}">
-                    <p>Ціна:
-                        <span class="emphasize" th:text="'$' + ${product.getPrice()}">$19.99</span>
-                    </p>
-                    <p th:if="${currency != -1}">Ціна:
-                        <span class="emphasize"
-                              th:text="'₴' + ${currency}">$19.99</span>
-                    </p>
-                    <div th:if="${product.getActive()}">
-                        <label>Кількість:</label>
-                        <select name="quantity" class="select-dropdown">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
+<form id="addToCart" th:method="POST"
+      th:action="@{/addToCart/{id}(id = ${product.getId()})}">
+    <div class="container mt-5 mb-5">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="images p-3">
+                                <div class="text-center p-4"><img id="main-image"
+                                                                  th:src="*{'data:image/jpeg;base64,'+ {product.nameImg}}"
+                                                                  width="250"/></div>
+                                <!--                            <div class="thumbnail text-center">-->
+                                <!--                                <img onclick="change_image(this)"-->
+                                <!--                                                                    th:src="*{'data:image/jpeg;base64,'+ {product.nameImg}}"-->
+                                <!--                                                                    width="70">-->
+                                <!--                                <img onclick="change_image(this)"-->
+                                <!--                                     th:src="*{'data:image/jpeg;base64,'+ {product.nameImg}}" width="70">-->
+                                <!--                            </div>-->
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="product p-4">
+                                <div class="mt-4 mb-3"><span class="text-uppercase text-muted brand">BestShop</span>
+                                    <h5 class="text-uppercase" th:text="${product.getName()}">Men's slim fit
+                                        t-shirt</h5>
+                                    <div th:with="currency=${T(Math).round(T(ua.bondar.course.bondarsite.dto.ExchangeDTO).exchangeUSDforUAH(product.getPrice()))}"
+                                         class="price d-flex flex-row align-items-center"><span class="act-price"
+                                                                                                th:text="'$' + ${product.getPrice()}">$20</span>
+                                        <div class="ml-2"><span th:if="${currency != -1}" style="padding-left: 5px" th:text="'₴' + ${currency}">₴</span></div>
+                                    </div>
+                                </div>
+                                <p class="about" th:text="${product.getDescription()}">Shop from a wide range of t-shirt
+                                    from orianz. Pefect for your everyday
+                                    use, you could pair it with a stylish pair of jeans or trousers complete the
+                                    look.</p>
+                                <div class="sizes mt-5" th:if="${product.getActive()}">
+                                    <h6 class="text-uppercase">Кількість</h6>
+                                    <label class="radio"> <input name="quantity" type="radio" value="1" checked>
+                                        <span>1</span> </label> <label class="radio"> <input type="radio"
+                                                                                             name="quantity" value="2">
+                                    <span>2</span> </label> <label class="radio"> <input type="radio" name="quantity"
+                                                                                         value="3">
+                                    <span>3</span> </label> <label class="radio"> <input type="radio" name="quantity"
+                                                                                         value="4"> <span>4</span>
+                                </label> <label class="radio"> <input type="radio" name="quantity" value="5">
+                                    <span>5</span>
+                                </label>
+                                </div>
+                                <div th:if="${product.getActive()}" class="cart mt-4 align-items-center">
+                                    <button form="addToCart" type="submit"
+                                            class="btn btn-danger text-uppercase mr-2 px-4">
+                                        Додати в корзину
+                                    </button>
+                                    <i class="fa fa-heart text-muted"></i> <i class="fa fa-share-alt text-muted"></i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div th:if="${!product.getActive()}">
-                        <label>Кількість: 0</label>
-                    </div>
-                </span>
-                <div>
-                    <h2 class="title">Product Description</h2>
-                    <p th:text="${product.getDescription()}"></p>
                 </div>
-                <div>
-                    <button th:if="${product.getActive()}" type="submit" class="my-btn flex-btn">
-                        <span>
-                            <img src="https://cdn1.iconfinder.com/data/icons/material-core/20/shopping-cart-128.png"
-                                 class="cart-icon"/>
-                        </span>
-                        <span class="btn-text">Додати в кошик</span>
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
-</div>
-
-<script>
-    $('.product-image--list li').hover(function () {
-        var url = $(this).children('img').attr('src');
-        $('.item-selected').removeClass('item-selected');
-        $(this).addClass('item-selected');
-        $('#featured').attr('src', url);
-    });
-</script>
-<script>
-    var imgShow2 = document.getElementById('buy-toaster');
-    imgShow2.onclick = function () {
-        alert("BUY ME PLS!");
-    };
-</script>
+</form>
 
 </body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
+<script>
+    function change_image(image) {
+
+        var container = document.getElementById("main-image");
+
+        container.src = image.src;
+    }
+
+    document.addEventListener("DOMContentLoaded", function (event) {
+    });
+</script>
 
 </html>
