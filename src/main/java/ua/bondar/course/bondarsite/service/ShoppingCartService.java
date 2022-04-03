@@ -98,7 +98,6 @@ public class ShoppingCartService {
         ShoppingCart sh = shoppingCartRepository.findByTokenSession(sessionToken);
         sh.setLocation(location);
         sh.setActive(true);
-        sh.setCompliedOrder(true);
         sh.setTokenSession(null);
         sh.setDate(new Date());
         sh.setBuyerName(buyerName);
@@ -112,6 +111,7 @@ public class ShoppingCartService {
     public void acceptOrder(Long id){
         ShoppingCart sh = shoppingCartRepository.findShoppingCartById(id);
         sh.setActive(false);
+        sh.setCompliedOrder(true);
         log.info("Обробка замовлення №" + id + " адмінстратором");
         shoppingCartRepository.saveAndFlush(sh);
     }

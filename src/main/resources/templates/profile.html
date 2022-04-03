@@ -17,7 +17,7 @@
         .container_content {
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
+            flex-direction: column;
         }
 
     </style>
@@ -25,7 +25,8 @@
 <body>
 <div th:replace="~{fragments/navbar :: header}">Header</div>
 
-<div sec:authorize="hasAuthority('ADMIN')" style="margin-top: 10px; display: flex; justify-content: center;">
+<div sec:authorize="hasAuthority('ADMIN')" style="margin: 10px auto 0 auto; max-width: 99%;
+            overflow: hidden; display: flex; justify-content: center;">
     <div>
         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="display: flex; justify-content: center">
             <li class="nav-item" role="presentation">
@@ -56,7 +57,7 @@
                                             <div class="items">
                                                 <div class="product" th:each="cartItem : ${listProduct.getItems()}">
                                                     <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-3 block-photo">
                                                             <img class="img-fluid mx-auto d-block image"
                                                                  th:src="*{'data:image/jpeg;base64,'+{cartItem.getProduct().nameImg}}">
                                                         </div>
@@ -133,7 +134,7 @@
                                             <div class="items">
                                                 <div class="product" th:each="cartItem : ${listProduct.getItems()}">
                                                     <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-3 block-photo">
                                                             <img class="img-fluid mx-auto d-block image"
                                                                  th:src="*{'data:image/jpeg;base64,'+{cartItem.getProduct().nameImg}}">
                                                         </div>
@@ -181,7 +182,7 @@
                                                 <div th:if="${listProduct.getBuyerName() != null}" class="summary-item"><span class="text">Замовник</span><span
                                                         class="price" th:text="${listProduct.getBuyerName()}">$0</span>
                                                 </div>
-                                             </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -205,7 +206,7 @@
                                             <div class="items">
                                                 <div class="product" th:each="cartItem : ${listProduct.getItems()}">
                                                     <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-3 block-photo">
                                                             <img class="img-fluid mx-auto d-block image"
                                                                  th:src="*{'data:image/jpeg;base64,'+{cartItem.getProduct().nameImg}}">
                                                         </div>
