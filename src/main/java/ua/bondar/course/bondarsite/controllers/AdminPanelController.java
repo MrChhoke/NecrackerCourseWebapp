@@ -39,9 +39,36 @@ public class AdminPanelController {
                              @ModelAttribute("formproduct") Product product, Model model) {
         List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
         model.addAttribute("allCategory", allCategory);
-
         model.addAttribute("user", user);
         return "adminPanel";
+    }
+
+    @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
+    @PutMapping("/adminpanel/{id}")
+    public String updateProduct(@AuthenticationPrincipal UserOfShop user,
+                                @ModelAttribute("productValid") @Valid Product product, BindingResult bindingResult,Model model,
+                                @RequestParam(value = "file", required = false) MultipartFile file,
+                                @RequestParam(value = "category", required = false) String category,
+                                @PathVariable(value = "id") Long id
+                                ) {
+        model.addAttribute("user", user);
+        if (bindingResult.hasErrors()) {
+            List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
+            model.addAttribute("allCategory", allCategory);
+            model.addAttribute("product", productService.getProductById(id));
+            return "product";
+        }
+        if(!file.isEmpty()){
+            try {
+                product.setNameImg(Base64.getEncoder().encodeToString(file.getBytes()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else{
+            product.setNameImg(productService.getProductById(id).getNameImg());
+        }
+        productService.updateProduct(product);
+        return "redirect:/" + product.getId();
     }
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN')")

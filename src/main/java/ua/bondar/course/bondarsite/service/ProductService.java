@@ -41,4 +41,9 @@ public class ProductService {
         log.info("Замовлення №" + id + " було видалено адмністратором");
         return productRepository.saveAndFlush(product);
     }
+
+    public void updateProduct(Product product){
+        log.info("Замовлення №" + product.getId() + " було оновлено адмністратором");
+        productRepository.saveAndFlush(product);
+    }
 }

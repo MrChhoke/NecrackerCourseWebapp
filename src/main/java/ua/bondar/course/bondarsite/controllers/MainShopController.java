@@ -49,7 +49,8 @@ public class MainShopController {
             @PathVariable(name = "id") Long id
     ) {
         model.addAttribute("product", productService.getProductById(id));
-
+        List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
+        model.addAttribute("allCategory", allCategory);
         model.addAttribute("user", user);
         return "product";
     }
