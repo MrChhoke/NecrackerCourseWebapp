@@ -27,7 +27,7 @@
 </div>
 <div class="content_container">
     <div class="container mt-5 mb-5">
-        <form id="addToCart" th:method="POST" th:action="@{/addToCart/{id}(id = ${product.getId()})}"></form>
+
         <div class="row d-flex justify-content-center">
             <div class="col-md-10">
                 <div class="card">
@@ -62,6 +62,7 @@
                                     from orianz. Pefect for your everyday
                                     use, you could pair it with a stylish pair of jeans or trousers complete the
                                     look.</p>
+                                <form id="addToCart" th:method="POST" th:action="@{/addToCart/{id}(id = ${product.getId()})}">
                                 <div class="sizes mt-5" th:if="${product.getActive()}">
                                     <h6 class="text-uppercase">Кількість</h6>
                                     <label class="radio"> <input name="quantity" type="radio" value="1" checked>
@@ -75,6 +76,7 @@
                                     <span>5</span>
                                 </label>
                                 </div>
+                                </form>
                                 <div th:if="${product.getActive()}" th:object="${product}"
                                      class="cart mt-4 align-items-center">
                                     <button form="addToCart" type="submit"
