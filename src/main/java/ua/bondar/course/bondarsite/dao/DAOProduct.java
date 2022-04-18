@@ -1,7 +1,6 @@
 package ua.bondar.course.bondarsite.dao;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ua.bondar.course.bondarsite.model.CategoryProduct;
 import ua.bondar.course.bondarsite.model.Product;
@@ -36,7 +35,7 @@ public class DAOProduct {
             while (resultSet.next()){
                 Product product = new Product();
                 product.setId(resultSet.getLong("id"));
-                product.setNameImg(resultSet.getString("name_img"));
+                product.setIdPhoto(resultSet.getString("name_img"));
                 product.setName(resultSet.getString("name"));
                 product.setPrice(resultSet.getDouble("price"));
                 product.setDescription(resultSet.getString("description"));
@@ -62,7 +61,7 @@ public class DAOProduct {
             while(resultSet.next()) {
                 product = new Product();
                 product.setId(resultSet.getLong("id"));
-                product.setNameImg(resultSet.getString("name_img"));
+                product.setIdPhoto(resultSet.getString("name_img"));
                 product.setName(resultSet.getString("name"));
                 product.setPrice(resultSet.getDouble("price"));
                 product.setDescription(resultSet.getString("description"));
@@ -86,7 +85,7 @@ public class DAOProduct {
                     " VALUES(?,?,?,?,?)");
             ps.setString(1, product.getName());
             ps.setDouble(2, product.getPrice());
-            ps.setString(3, product.getNameImg());
+            ps.setString(3, product.getIdPhoto());
             ps.setString(4, product.getDescription());
             ps.setString(5, CategoryProduct.getStringCategory(product.getCategory()));
             ps.executeUpdate();

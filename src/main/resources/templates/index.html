@@ -21,7 +21,7 @@
     <div th:each="product : ${products}" class="card" style="width: 260px; margin: 10px">
         <div style="display: flex; justify-content: center; align-items: center">
             <div class="boxforparent">
-                <a  th:href="@{/{id}(id=${product.getId()})}"><img class="card-img-top boxforchild" th:src="*{'data:image/jpeg;base64,'+{product.nameImg}}" alt="Card image cap"></a>
+                <a  th:href="@{/{id}(id=${product.getId()})}"><img class="card-img-top boxforchild" th:src="${product.getUrlPhoto()}" alt="Card image cap"></a>
             </div>
         </div>
         <div class="card-body">

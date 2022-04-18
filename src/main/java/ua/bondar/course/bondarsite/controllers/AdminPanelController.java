@@ -1,8 +1,6 @@
 package ua.bondar.course.bondarsite.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,15 +12,14 @@ import org.springframework.web.multipart.MultipartFile;
 import ua.bondar.course.bondarsite.model.CategoryProduct;
 import ua.bondar.course.bondarsite.model.Product;
 import ua.bondar.course.bondarsite.model.UserOfShop;
+import ua.bondar.course.bondarsite.service.FileService;
 import ua.bondar.course.bondarsite.service.ProductService;
 
 import javax.validation.Valid;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -32,6 +29,9 @@ public class AdminPanelController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private FileService fileService;
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
     @GetMapping("/adminpanel")
@@ -59,13 +59,9 @@ public class AdminPanelController {
             return "product";
         }
         if(!file.isEmpty()){
-            try {
-                product.setNameImg(Base64.getEncoder().encodeToString(file.getBytes()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            product.setIdPhoto(fileService.uploadPhoto(file));
         }else{
-            product.setNameImg(productService.getProductById(id).getNameImg());
+            product.setIdPhoto(productService.getProductById(id).getIdPhoto());
         }
         productService.updateProduct(product);
         return "redirect:/" + product.getId();
@@ -98,11 +94,9 @@ public class AdminPanelController {
 
         if (file.isEmpty()) {
             File fileChange = new File(Paths.get("src/main/resources/static/img/defaulIcon.png").toAbsolutePath().toString());
-            try(FileInputStream fileInputStream = new FileInputStream(fileChange)){
-                product.setNameImg(Base64.getEncoder().encodeToString(fileInputStream.readAllBytes()));
-            }
+            product.setIdPhoto(fileService.uploadPhoto(fileChange));
         } else {
-            product.setNameImg(Base64.getEncoder().encodeToString(file.getBytes()));
+            product.setIdPhoto(fileService.uploadPhoto(file));
         }
         productService.addProductForFirstTime(product);
         return "redirect:/adminpanel";

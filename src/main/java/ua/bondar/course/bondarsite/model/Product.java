@@ -30,8 +30,11 @@ public class Product {
     private double price;
 
     @Column(columnDefinition = "TEXT")
-    private String nameImg;
-
+    private String idPhoto;
 
     private Boolean active = true;
+
+    public String getUrlPhoto(){
+        return "https://drive.google.com/uc?export=view&id=" + idPhoto;
+    }
 }

@@ -35,7 +35,7 @@
                         <div class="col-md-6">
                             <div class="images p-3">
                                 <div class="text-center p-4"><img id="main-image"
-                                                                  th:src="*{'data:image/jpeg;base64,'+ {product.nameImg}}"
+                                                                  th:src="${product.getUrlPhoto()}"
                                                                   width="250"/></div>
                                 <!--                            <div class="thumbnail text-center">-->
                                 <!--                                <img onclick="change_image(this)"-->

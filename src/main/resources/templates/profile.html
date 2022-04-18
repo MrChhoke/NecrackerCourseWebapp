@@ -59,7 +59,7 @@
                                                     <div class="row">
                                                         <div class="col-md-3 block-photo">
                                                             <img class="img-fluid mx-auto d-block image"
-                                                                 th:src="*{'data:image/jpeg;base64,'+{cartItem.getProduct().nameImg}}">
+                                                                 th:src="${cartItem.getProduct().getUrlPhoto()}">
                                                         </div>
                                                         <div class="col-md-8">
                                                             <div class="info">
@@ -136,7 +136,7 @@
                                                     <div class="row">
                                                         <div class="col-md-3 block-photo">
                                                             <img class="img-fluid mx-auto d-block image"
-                                                                 th:src="*{'data:image/jpeg;base64,'+{cartItem.getProduct().nameImg}}">
+                                                                 th:src="${cartItem.getProduct().getUrlPhoto()}">
                                                         </div>
                                                         <div class="col-md-8">
                                                             <div class="info">
@@ -208,7 +208,7 @@
                                                     <div class="row">
                                                         <div class="col-md-3 block-photo">
                                                             <img class="img-fluid mx-auto d-block image"
-                                                                 th:src="*{'data:image/jpeg;base64,'+{cartItem.getProduct().nameImg}}">
+                                                                 th:src="${cartItem.getProduct().getUrlPhoto()}">
                                                         </div>
                                                         <div class="col-md-8">
                                                             <div class="info">
