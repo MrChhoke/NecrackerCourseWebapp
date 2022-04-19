@@ -11,9 +11,10 @@ services:
       - "5432:5432"
 
   app:
+    container_name: 'TheShopSite'
     build: ./
     ports:
-      - "8080:8080"
+      - "8888:8888"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/tester
       SPRING_DATASOURCE_USERNAME: admin
