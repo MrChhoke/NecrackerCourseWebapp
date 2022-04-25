@@ -14,7 +14,8 @@ import javax.validation.constraints.Size;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_product_items")
+    @SequenceGenerator(sequenceName = "id_product_item_sequence", name = "id_product_items", allocationSize = 1)
     private Long id;
 
     @Size(min = 3, max = 30, message = "Ім'я має містити від 3 до 30 символів")
@@ -37,4 +38,6 @@ public class Product {
     public String getUrlPhoto(){
         return "https://drive.google.com/uc?export=view&id=" + idPhoto;
     }
+
+
 }

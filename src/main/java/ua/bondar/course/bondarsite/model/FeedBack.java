@@ -16,7 +16,8 @@ import java.util.Date;
 public class FeedBack {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_feedbacks")
+    @SequenceGenerator(sequenceName = "id_feedback_sequence", name = "id_feedbacks", allocationSize = 1)
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
