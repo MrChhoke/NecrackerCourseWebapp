@@ -1,34 +1,43 @@
-package ua.bondar.course.bondarsite.dto;
+package ua.bondar.course.bondarsite.controllers;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
-import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePropertySource;
-import org.springframework.stereotype.Service;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import ua.bondar.course.bondarsite.model.UserOfShop;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Paths;
-import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 
-@Service
+@Controller
 @Slf4j
-public class DriveClient {
+public class GoogleConsoleController {
 
     private HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -54,47 +63,43 @@ public class DriveClient {
                     .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(credentialsFolder)))
                     .build();
         } catch (IOException e) {
-            log.error("DriveClient: " + e);
+            log.error("GoogleConsoleController: " + e);
         }
     }
 
-    public Drive getClient() {
-        Drive service = null;
+    @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
+    @GetMapping("/sign_in_google")
+    public void GoogleSignIn(HttpServletResponse response){
         try {
-            service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, flow.loadCredential(USER_IDENTIFIER_KEY))
-                    .setApplicationName("Web application 1")
-                    .build();
+            GoogleAuthorizationCodeRequestUrl url = flow.newAuthorizationUrl();
+            String redirectURL = url.setRedirectUri(CALLBACK_URI).setAccessType("offline").build();
+            response.sendRedirect(redirectURL);
         } catch (IOException e) {
-            log.error("DriveClient: " + e);
+            log.error("GoogleConsoleController: " + e);
         }
-
-        return service;
     }
 
-    public boolean isUserAuthenticated(){
+    @GetMapping("/Callback")
+    @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
+    public String saveAuthorizationCode(@AuthenticationPrincipal UserOfShop user,
+                                        Model model, HttpServletRequest request){
+        model.addAttribute("user", user);
+        String code = request.getParameter("code");
+        if(code != null){
+            saveToken(code);
+            log.info("Токен збережений успішно");
+            return "redirect:/";
+        }
+        return "errors";
+    }
+
+    private void saveToken(@NotNull String code){
         try {
-            HTTP_TRANSPORT = new NetHttpTransport();
-            JSON_FACTORY = JacksonFactory.getDefaultInstance();
-            GoogleClientSecrets secrets = GoogleClientSecrets.load(JSON_FACTORY,new InputStreamReader(new FileInputStream(Paths.get(gdSecretKey).toAbsolutePath().toString())));
-            flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT,JSON_FACTORY,secrets,SCOPES)
-                    .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(credentialsFolder)))
-                    .build();
+            GoogleTokenResponse response = flow.newTokenRequest(code).setRedirectUri(CALLBACK_URI).execute();
+            flow.createAndStoreCredential(response,USER_IDENTIFIER_KEY);
         } catch (IOException e) {
-            log.error("DriveClient: " + e);
+            log.error("GoogleConsoleController: " + e);
         }
 
-        boolean isUserAuthenticated = false;
-        try {
-            Credential credential = flow.loadCredential(USER_IDENTIFIER_KEY);
-            if(credential != null){
-                boolean tokenValid = credential.refreshToken();
-                if(tokenValid){
-                    isUserAuthenticated = true;
-                }
-            }
-        } catch (IOException e) {
-            log.error("DriveClient: " + e);
-        }
-        return isUserAuthenticated;
     }
 }

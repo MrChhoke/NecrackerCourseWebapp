@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ua.bondar.course.bondarsite.dto.DriveClient;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -28,7 +30,10 @@ public class FileService {
     /**
      * @param multipartFile - file from frontend
      * @return String that is id of photo
-     * **/
+     **/
+
+
+
     public String uploadPhoto(MultipartFile multipartFile) {
         try {
             InputStream initialStream = multipartFile.getInputStream();
@@ -39,14 +44,14 @@ public class FileService {
                 outStream.write(buffer);
             }
             com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
-            fileMetadata.setName("photo11.png");
+            fileMetadata.setName(UUID.randomUUID().toString());
             fileMetadata.setParents(Collections.singletonList(folderId));
             FileContent mediaContent = new FileContent("image/jpeg", file);
             com.google.api.services.drive.model.File fileGoogle = driveClient.getClient().files().create(fileMetadata, mediaContent)
                     .setFields("id")
                     .execute();
             return fileGoogle.getId();
-        } catch (IOException | GeneralSecurityException e) {
+        } catch (IOException e) {
             log.error("FileService: " + e);
         }
         return null;
@@ -55,17 +60,20 @@ public class FileService {
     public String uploadPhoto(File file) {
         try {
             com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
-            fileMetadata.setName("photo11.png");
+            fileMetadata.setName(UUID.randomUUID().toString());
             fileMetadata.setParents(Collections.singletonList(folderId));
             FileContent mediaContent = new FileContent("image/jpeg", file);
             com.google.api.services.drive.model.File fileGoogle = driveClient.getClient().files().create(fileMetadata, mediaContent)
                     .setFields("id")
                     .execute();
             return fileGoogle.getId();
-        } catch (IOException | GeneralSecurityException e) {
+        } catch (IOException e) {
             log.error("FileService: " + e);
         }
         return null;
     }
 
+    public boolean isFileServiceAccess(){
+        return driveClient.isUserAuthenticated();
+    }
 }
