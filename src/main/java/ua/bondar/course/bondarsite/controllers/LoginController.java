@@ -10,7 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import ua.bondar.course.bondarsite.model.RegisterForm;
+import ua.bondar.course.bondarsite.model.UserOfShop;
 import ua.bondar.course.bondarsite.repo.UserRepo;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @Slf4j
@@ -33,7 +37,7 @@ public class LoginController {
     }
 
     @PostMapping("/registration")
-    public String processUser(RegisterForm form, Model model){
+    public String processUser(RegisterForm form, Model model, HttpServletRequest request){
         if(userRepo.existsUserOfShopsByUsername(form.getUsername())){
             model.addAttribute("existUser", true);
             log.warn("Була спроба створити існуючуго юзера! - " + form.getUsername());
@@ -41,6 +45,11 @@ public class LoginController {
         }
         log.info("Створено юзера: " + form.getUsername());
         userRepo.save(form.toUser(passwordEncoder));
-        return "redirect:/login";
+        try {
+            request.login(form.getUsername(), form.getPassword());
+        } catch (ServletException e) {
+            log.error("Щось не так у процесі авторизації: " + e);
+        }
+        return "redirect:/";
     }
 }
