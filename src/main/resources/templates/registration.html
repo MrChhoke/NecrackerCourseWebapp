@@ -142,7 +142,7 @@
 
 <form th:action="@{/registration}" method="post">
   <h3>Registration Here</h3>
-
+  <label  for="password" style="color: red" th:if="${existUser != null}">Спробуйте інше ім'я</label>
   <label for="username">Username</label>
   <input type="text" name="username" placeholder="Username" id="username">
 
