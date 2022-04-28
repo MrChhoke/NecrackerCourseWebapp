@@ -15,6 +15,7 @@ import ua.bondar.course.bondarsite.model.UserOfShop;
 import ua.bondar.course.bondarsite.service.FileService;
 import ua.bondar.course.bondarsite.service.ProductService;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,29 +41,33 @@ public class AdminPanelController {
         List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
         model.addAttribute("allCategory", allCategory);
         model.addAttribute("user", user);
+        model.addAttribute("isFileServiceAccess", fileService.isFileServiceAccess());
         return "adminPanel";
     }
 
     @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
     @PutMapping("/adminpanel/{id}")
     public String updateProduct(@AuthenticationPrincipal UserOfShop user,
+                                HttpServletResponse response,
                                 @ModelAttribute("productValid") @Valid Product product, BindingResult bindingResult,Model model,
                                 @RequestParam(value = "file", required = false) MultipartFile file,
                                 @RequestParam(value = "category", required = false) String category,
                                 @PathVariable(value = "id") Long id
                                 ) {
         model.addAttribute("user", user);
+
+        if(!fileService.isFileServiceAccess()){
+            return "redirect:/";
+        }
+
         if (bindingResult.hasErrors()) {
             List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
+            response.setStatus(400);
             model.addAttribute("allCategory", allCategory);
             model.addAttribute("product", productService.getProductById(id));
             return "product";
         }
-        if(!file.isEmpty()){
-            product.setIdPhoto(fileService.uploadPhoto(file));
-        }else{
-            product.setIdPhoto(productService.getProductById(id).getIdPhoto());
-        }
+        uploadPhoto(file,product);
         productService.updateProduct(product);
         return "redirect:/" + product.getId();
     }
@@ -80,9 +85,13 @@ public class AdminPanelController {
                                 @ModelAttribute("formproduct") @Valid Product product,
                                 BindingResult bindingResult, Model model,
                                 @RequestParam(value = "file", required = false) MultipartFile file,
-                                @RequestParam(value = "category", required = false) String category) throws IOException {
+                                @RequestParam(value = "category", required = false) String category) {
 
         model.addAttribute("user", user);
+
+        if(!fileService.isFileServiceAccess()){
+            return "redirect:/adminpanel";
+        }
 
         if (bindingResult.hasErrors()) {
             List<String> allCategory = CategoryProduct.getAllCategoryProductInString();
@@ -92,14 +101,17 @@ public class AdminPanelController {
         if (category == null) category = CategoryProduct.getAllCategoryProductInString().get(1);
         product.setCategory(CategoryProduct.getCategoryProduct(category));
 
+        uploadPhoto(file,product);
+        productService.addProductForFirstTime(product);
+        return "redirect:/adminpanel";
+    }
+
+    private void uploadPhoto(MultipartFile file, Product product){
         if (file.isEmpty()) {
             File fileChange = new File(Paths.get("src/main/resources/static/img/defaulIcon.png").toAbsolutePath().toString());
             product.setIdPhoto(fileService.uploadPhoto(fileChange));
         } else {
             product.setIdPhoto(fileService.uploadPhoto(file));
         }
-        productService.addProductForFirstTime(product);
-        return "redirect:/adminpanel";
     }
-
 }

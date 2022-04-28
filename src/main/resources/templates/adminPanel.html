@@ -102,7 +102,10 @@
                                value="upload" accept="image/png, image/jpeg"/>
                     </div>
                     <div style="display: flex; justify-content: center;">
-                        <button class="btn btn-primary" type="submit">Додати</button>
+                        <button th:if="${isFileServiceAccess == null ||  isFileServiceAccess}" class="btn btn-primary" type="submit">Додати</button>
+                        <a th:if="${isFileServiceAccess != null && !isFileServiceAccess}" th:href="@{/sign_in_google}">
+                            <button class="btn btn-primary" form="fake" type="submit">Підключитися до диску</button>
+                        </a>
                         <div style="padding-left: 20px">
                             <button th:if="${#fields.hasErrors('name') || #fields.hasErrors('price') || #fields.hasErrors('description')}" type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#dangerModal">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
