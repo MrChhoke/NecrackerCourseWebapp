@@ -1,48 +1,54 @@
 package ua.bondar.course.bondarsite.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.bondar.course.bondarsite.model.CategoryProduct;
-import ua.bondar.course.bondarsite.model.Product;
+import ua.bondar.course.bondarsite.model.item.CategoryProduct;
+import ua.bondar.course.bondarsite.model.item.Product;
+import ua.bondar.course.bondarsite.model.item.ProductDecorator;
 import ua.bondar.course.bondarsite.repo.ProductRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class ProductService {
 
+    private final ProductRepository productRepository;
+    private final FileService fileService;
+
     @Autowired
-    private ProductRepository productRepository;
-
-    public Product getProductById(Long id){
-        return productRepository.findProductById(id);
+    public ProductService(ProductRepository productRepository,
+                          FileService fileService) {
+        this.productRepository = productRepository;
+        this.fileService = fileService;
     }
 
-    public List<Product> getAllProduct(){
-        return productRepository.findProductByActive(true);
+    public Product getProductById(Long id) {
+        return new ProductDecorator(productRepository.findProductById(id), fileService, this);
     }
 
-    public Product addProductForFirstTime(Product product){
+    public List<Product> getAllProduct() {
+        return productRepository.findProductByActive(true)
+                .stream()
+                .map(item -> new ProductDecorator(item, fileService, this))
+                .collect(Collectors.toList());
+    }
+
+    public Product addProductForFirstTime(Product product) {
         log.info("Був доданий продукт: " + product.getName());
         return productRepository.saveAndFlush(product);
     }
 
-    public List<Product> getAllProductByCategory(CategoryProduct categoryProduct){
-        return productRepository.findProductByCategoryAndActive(categoryProduct,true);
-    }
-
-    public Product deleteById(Long id){
+    public Product deleteById(Long id) {
         Product product = productRepository.findProductById(id);
         product.setActive(false);
         log.info("Замовлення №" + id + " було видалено адмністратором");
-        return productRepository.saveAndFlush(product);
+        return new ProductDecorator(productRepository.saveAndFlush(product), fileService, this);
     }
 
-    public void updateProduct(Product product){
+    public void updateProduct(Product product) {
         log.info("Замовлення №" + product.getId() + " було оновлено адмністратором");
         productRepository.saveAndFlush(product);
     }

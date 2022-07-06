@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import ua.bondar.course.bondarsite.model.CurrencyList;
+import ua.bondar.course.bondarsite.model.currency.CurrencyList;
 
 import java.net.URI;
 

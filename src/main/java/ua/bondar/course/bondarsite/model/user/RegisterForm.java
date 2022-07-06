@@ -1,4 +1,4 @@
-package ua.bondar.course.bondarsite.model;
+package ua.bondar.course.bondarsite.model.user;
 
 import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;

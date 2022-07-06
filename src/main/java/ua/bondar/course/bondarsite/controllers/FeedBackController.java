@@ -7,22 +7,26 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ua.bondar.course.bondarsite.model.FeedBack;
-import ua.bondar.course.bondarsite.model.UserOfShop;
+import ua.bondar.course.bondarsite.model.message.FeedBack;
+import ua.bondar.course.bondarsite.model.user.UserOfShop;
 import ua.bondar.course.bondarsite.service.FeedBackService;
 
 import javax.validation.Valid;
-import java.util.Date;
 
 @Controller
 public class FeedBackController {
 
+    private final FeedBackService feedBackService;
+
     @Autowired
-    private FeedBackService feedBackService;
+    public FeedBackController(FeedBackService feedBackService) {
+        this.feedBackService = feedBackService;
+    }
 
     @GetMapping("/feedback")
     public String feedBackPage(@AuthenticationPrincipal UserOfShop user,
-                               @ModelAttribute("feedbackForm") @Valid FeedBack feedBack, Model model){
+                               @ModelAttribute("feedbackForm") @Valid FeedBack feedBack,
+                               Model model){
 
         model.addAttribute("user", user);
         feedBack.setUserOfShop(user);
@@ -33,7 +37,8 @@ public class FeedBackController {
     @PostMapping("/feedback")
     public String setFeedBack(@AuthenticationPrincipal UserOfShop user,
                               @ModelAttribute("feedbackForm") @Valid FeedBack feedBack,
-                              BindingResult bindingResult, Model model){
+                              BindingResult bindingResult,
+                              Model model){
 
         model.addAttribute("user", user);
 

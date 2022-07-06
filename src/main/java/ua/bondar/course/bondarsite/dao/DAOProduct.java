@@ -2,8 +2,8 @@ package ua.bondar.course.bondarsite.dao;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ua.bondar.course.bondarsite.model.CategoryProduct;
-import ua.bondar.course.bondarsite.model.Product;
+import ua.bondar.course.bondarsite.model.item.CategoryProduct;
+import ua.bondar.course.bondarsite.model.item.Product;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -39,7 +39,7 @@ public class DAOProduct {
                 product.setName(resultSet.getString("name"));
                 product.setPrice(resultSet.getDouble("price"));
                 product.setDescription(resultSet.getString("description"));
-                product.setCategory(CategoryProduct.getCategoryProduct(resultSet.getString("category")));
+                product.setCategory(CategoryProduct.valueOf(resultSet.getString("category")));
                 list.add(product);
             }
             statement.close();
@@ -65,7 +65,7 @@ public class DAOProduct {
                 product.setName(resultSet.getString("name"));
                 product.setPrice(resultSet.getDouble("price"));
                 product.setDescription(resultSet.getString("description"));
-                product.setCategory(CategoryProduct.getCategoryProduct(resultSet.getString("category")));
+                product.setCategory(CategoryProduct.valueOf(resultSet.getString("category")));
             }
             statement.close();
             resultSet.close();
@@ -87,7 +87,7 @@ public class DAOProduct {
             ps.setDouble(2, product.getPrice());
             ps.setString(3, product.getIdPhoto());
             ps.setString(4, product.getDescription());
-            ps.setString(5, CategoryProduct.getStringCategory(product.getCategory()));
+            ps.setString(5, product.getCategory().name());
             ps.executeUpdate();
             ps.close();
         }catch (SQLException | ClassNotFoundException e){

@@ -1,4 +1,4 @@
-package ua.bondar.course.bondarsite.model;
+package ua.bondar.course.bondarsite.model.item;
 
 
 import lombok.Data;

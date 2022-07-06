@@ -15,34 +15,47 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.UUID;
 
+
+/**
+ * The class for using Google API
+ * @version 1.0
+ * @author Vladyslav Bondar
+ */
 @Service
 @Slf4j
 public class FileService {
 
     /**
      * The folder id in Google Drive
-     **/
-    private String folderId = "1QYcYaytfE2mNpuNibIlDgEvbmLU_jLNT";
+     */
+    private final String folderId = "1QYcYaytfE2mNpuNibIlDgEvbmLU_jLNT";
+
+    private final DriveClient driveClient;
 
     @Autowired
-    private DriveClient driveClient;
+    public FileService(DriveClient driveClient) {
+        this.driveClient = driveClient;
+    }
 
     /**
-     * @param multipartFile - file from frontend
-     * @return String that is id of photo
-     **/
-
-
-
+     * The method for uploding file into google drive
+     * @param multipartFile is a file that should be uploaded
+     * @return {@link java.lang.String} that contains file id
+     */
     public String uploadPhoto(MultipartFile multipartFile) {
         try {
             InputStream initialStream = multipartFile.getInputStream();
             byte[] buffer = new byte[initialStream.available()];
             initialStream.read(buffer);
-            File file = new File(Paths.get("src/main/resources/static/img/photo.png").toAbsolutePath().toString());
-            try (OutputStream outStream = new FileOutputStream(file)) {
+            StringBuilder builder = new StringBuilder("src/main/resources/static/img/");
+            builder.append(UUID.randomUUID());
+            builder.append(".png");
+            try (OutputStream outStream = new FileOutputStream(
+                    Paths.get(builder.toString()).toAbsolutePath().toString()
+            )) {
                 outStream.write(buffer);
             }
+            File file = new File(builder.toString());
             com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
             fileMetadata.setName(UUID.randomUUID().toString());
             fileMetadata.setParents(Collections.singletonList(folderId));
@@ -50,6 +63,7 @@ public class FileService {
             com.google.api.services.drive.model.File fileGoogle = driveClient.getClient().files().create(fileMetadata, mediaContent)
                     .setFields("id")
                     .execute();
+            file.delete();
             return fileGoogle.getId();
         } catch (IOException e) {
             log.error("FileService: " + e);
@@ -57,6 +71,11 @@ public class FileService {
         return null;
     }
 
+    /**
+     * The method for uploding file into google drive
+     * @param file is link of file that should be uploaded
+     * @return {@link java.lang.String} that contains file id
+     */
     public String uploadPhoto(File file) {
         try {
             com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
@@ -73,6 +92,24 @@ public class FileService {
         return null;
     }
 
+    public boolean isFileExist(String idFile){
+        if(idFile == null || idFile.equals("")) return false;
+        try {
+            boolean bool = driveClient.getClient()
+                    .files()
+                    .get(idFile)
+                    .execute()
+                    .isEmpty();
+            return !bool;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    /**
+     * The method for checking download is available
+     * @return boolean variable showing availability
+     */
     public boolean isFileServiceAccess(){
         return driveClient.isUserAuthenticated();
     }

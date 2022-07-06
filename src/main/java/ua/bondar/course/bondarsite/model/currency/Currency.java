@@ -1,4 +1,4 @@
-package ua.bondar.course.bondarsite.model;
+package ua.bondar.course.bondarsite.model.currency;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;

@@ -1,7 +1,7 @@
 package ua.bondar.course.bondarsite.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ua.bondar.course.bondarsite.model.ShoppingCart;
+import ua.bondar.course.bondarsite.model.item.ShoppingCart;
 
 import java.util.List;
 

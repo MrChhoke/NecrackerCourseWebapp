@@ -12,17 +12,13 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.ResourcePropertySource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Paths;
-import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 

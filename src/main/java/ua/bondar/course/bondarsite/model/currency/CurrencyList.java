@@ -1,4 +1,4 @@
-package ua.bondar.course.bondarsite.model;
+package ua.bondar.course.bondarsite.model.currency;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import lombok.Data;

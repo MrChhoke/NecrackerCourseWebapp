@@ -12,8 +12,8 @@
     <artifactId>bondarSite</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>bondarSite</name>
-    <description>bondarSite</description>
+    <name>NecrackerCourseWebapp</name>
+    <description>The little webapp for my imagine shop</description>
     <properties>
         <java.version>11</java.version>
     </properties>

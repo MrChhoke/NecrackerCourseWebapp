@@ -1,12 +1,9 @@
 package ua.bondar.course.bondarsite.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.bondar.course.bondarsite.model.FeedBack;
-import ua.bondar.course.bondarsite.model.UserOfShop;
+import ua.bondar.course.bondarsite.model.message.FeedBack;
 import ua.bondar.course.bondarsite.repo.FeedBackRepositary;
 
 import java.util.Date;
@@ -16,8 +13,12 @@ import java.util.List;
 @Slf4j
 public class FeedBackService {
 
+    private final FeedBackRepositary feedBackRepositary;
+
     @Autowired
-    private FeedBackRepositary feedBackRepositary;
+    public FeedBackService(FeedBackRepositary feedBackRepositary) {
+        this.feedBackRepositary = feedBackRepositary;
+    }
 
     public List<FeedBack> getAllFeedBack(){
         return feedBackRepositary.findAll();

@@ -1,11 +1,11 @@
-package ua.bondar.course.bondarsite.model;
+package ua.bondar.course.bondarsite.model.message;
 
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
+import ua.bondar.course.bondarsite.model.user.UserOfShop;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.text.SimpleDateFormat;
 import java.util.Date;

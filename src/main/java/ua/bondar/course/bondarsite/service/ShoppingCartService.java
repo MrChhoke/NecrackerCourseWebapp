@@ -1,18 +1,16 @@
 package ua.bondar.course.bondarsite.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.bondar.course.bondarsite.model.CartItem;
-import ua.bondar.course.bondarsite.model.Product;
-import ua.bondar.course.bondarsite.model.ShoppingCart;
+import ua.bondar.course.bondarsite.model.item.CartItem;
+import ua.bondar.course.bondarsite.model.item.Product;
+import ua.bondar.course.bondarsite.model.item.ProductDecorator;
+import ua.bondar.course.bondarsite.model.item.ShoppingCart;
 import ua.bondar.course.bondarsite.repo.CardItemRepository;
 import ua.bondar.course.bondarsite.repo.ShoppingCartRepository;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,15 +18,22 @@ import java.util.Set;
 @Slf4j
 public class ShoppingCartService {
 
-    @Autowired
-    private ShoppingCartRepository shoppingCartRepository;
+    private final ShoppingCartRepository shoppingCartRepository;
+    private final CardItemRepository cardItemRepository;
+    private final ProductService productService;
+    private final FileService fileService;
+
 
     @Autowired
-    private CardItemRepository cardItemRepository;
-
-    @Autowired
-    private ProductService productService;
-
+    public ShoppingCartService(ShoppingCartRepository shoppingCartRepository,
+                               FileService fileService,
+                               CardItemRepository cardItemRepository,
+                               ProductService productService) {
+        this.fileService = fileService;
+        this.shoppingCartRepository = shoppingCartRepository;
+        this.cardItemRepository = cardItemRepository;
+        this.productService = productService;
+    }
 
     public ShoppingCart addShoppingCartFirstTime(Long id, String sessionToken, int amount){
         ShoppingCart shoppingCart = new ShoppingCart();
@@ -63,7 +68,12 @@ public class ShoppingCartService {
     }
 
     public ShoppingCart getShoppingCartByTokenSession(String sessionToken) {
-        return shoppingCartRepository.findByTokenSession(sessionToken);
+        ShoppingCart shoppingCart = shoppingCartRepository.findByTokenSession(sessionToken);
+        shoppingCart.getItems()
+                    .forEach(cartItem -> cartItem.setProduct(
+                            new ProductDecorator(cartItem.getProduct(),fileService,productService)
+                    ));
+        return shoppingCart;
     }
 
     public CartItem updateShoppingCartItem(Long id, int amount) {
@@ -118,15 +128,36 @@ public class ShoppingCartService {
     }
 
     public List<ShoppingCart> getShoppingCartsByActive(Boolean active){
-        return shoppingCartRepository.findShoppingCartsByActive(active);
+        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findShoppingCartsByActive(active);
+        for (ShoppingCart shoppingCart: shoppingCarts) {
+            shoppingCart.getItems()
+                    .forEach(cartItem -> cartItem.setProduct(
+                            new ProductDecorator(cartItem.getProduct(),fileService,productService)
+                    ));
+        }
+        return shoppingCarts;
     }
 
     public List<ShoppingCart> getHistoryOfUser(String username){
-        return shoppingCartRepository.findShoppingCartByBuyerNameAndCompliedOrder(username,true);
+        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findShoppingCartByBuyerNameAndCompliedOrder(username,true);
+        for (ShoppingCart shoppingCart: shoppingCarts) {
+            shoppingCart.getItems()
+                    .forEach(cartItem -> cartItem.setProduct(
+                            new ProductDecorator(cartItem.getProduct(),fileService,productService)
+                    ));
+        }
+        return shoppingCarts;
     }
 
     public List<ShoppingCart> getFullHistoryOrderHistory(){
-        return shoppingCartRepository.findShoppingCartByCompliedOrder(true);
+        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findShoppingCartByCompliedOrder(true);
+        for (ShoppingCart shoppingCart: shoppingCarts) {
+            shoppingCart.getItems()
+                    .forEach(cartItem -> cartItem.setProduct(
+                            new ProductDecorator(cartItem.getProduct(),fileService,productService)
+                    ));
+        }
+        return shoppingCarts;
     }
 
 

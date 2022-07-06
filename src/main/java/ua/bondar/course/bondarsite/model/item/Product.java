@@ -1,43 +1,45 @@
-package ua.bondar.course.bondarsite.model;
+package ua.bondar.course.bondarsite.model.item;
 
 
-import lombok.Data;
+import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import ua.bondar.course.bondarsite.model.item.CategoryProduct;
+import ua.bondar.course.bondarsite.service.FileService;
+
 import javax.persistence.*;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id_product_items")
     @SequenceGenerator(sequenceName = "id_product_item_sequence", name = "id_product_items", allocationSize = 1)
-    private Long id;
+    protected Long id;
 
     @Size(min = 3, max = 30, message = "Ім'я має містити від 3 до 30 символів")
-    private String name;
+    protected String name;
 
     @Size(min = 10, max = 300, message = "Опис має містити від 10 до 300 символів")
-    private String description;
+    protected String description;
 
     @Enumerated(EnumType.STRING)
-    private CategoryProduct category;
+    protected CategoryProduct category;
 
     @Min(message = "Ціна повинна бути більше 1", value = 1)
-    private double price;
+    protected double price;
 
     @Column(columnDefinition = "TEXT")
-    private String idPhoto;
+    protected String idPhoto;
 
-    private Boolean active = true;
+    protected Boolean active = true;
 
-    public String getUrlPhoto(){
-        return "https://drive.google.com/uc?export=view&id=" + idPhoto;
+    public String getUrlPhoto() {
+        return null;
     }
-
-
 }
