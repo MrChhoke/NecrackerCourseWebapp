@@ -1,8 +1,8 @@
-CREATE SEQUENCE IF NOT EXISTS id_user_sequence START 1 INCREMENT 1;
-CREATE SEQUENCE IF NOT EXISTS id_feedback_sequence START 1 INCREMENT 1;
-CREATE SEQUENCE IF NOT EXISTS id_cart_item_sequence START 1 INCREMENT 1;
-CREATE SEQUENCE IF NOT EXISTS id_product_item_sequence START 1 INCREMENT 1;
-CREATE SEQUENCE IF NOT EXISTS id_shopping_cart_sequence START 1 INCREMENT 1;
+CREATE SEQUENCE IF NOT EXISTS myschema.id_user_sequence START 1 INCREMENT 1;
+CREATE SEQUENCE IF NOT EXISTS myschema.id_feedback_sequence START 1 INCREMENT 1;
+CREATE SEQUENCE IF NOT EXISTS myschema.id_cart_item_sequence START 1 INCREMENT 1;
+CREATE SEQUENCE IF NOT EXISTS myschema.id_product_item_sequence START 1 INCREMENT 1;
+CREATE SEQUENCE IF NOT EXISTS myschema.id_shopping_cart_sequence START 1 INCREMENT 1;
 
 CREATE TABLE IF NOT EXISTS user_of_shop
 (
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS user_of_shop
 
 CREATE TABLE IF NOT EXISTS roles
 (
-    user_of_shop_id INT8 NOT NULL,
+    userofshop_id INT8 NOT NULL,
     roles           VARCHAR(255)
 );
 

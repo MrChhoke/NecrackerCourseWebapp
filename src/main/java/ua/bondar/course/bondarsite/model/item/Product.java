@@ -34,7 +34,7 @@ public class Product {
     @Min(message = "Ціна повинна бути більше 1", value = 1)
     protected double price;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "id_photo", columnDefinition = "TEXT")
     protected String idPhoto;
 
     protected Boolean active = true;

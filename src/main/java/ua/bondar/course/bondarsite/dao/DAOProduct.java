@@ -14,11 +14,11 @@ import java.util.List;
 @Component
 public class DAOProduct {
 
-    @Value("${spring.datasource.url}")
+    //@Value("${spring.datasource.url}")
     private String URL;
-    @Value("${spring.datasource.username}")
+    //@Value("${spring.datasource.username}")
     private String USER = "postgres";
-    @Value("${spring.datasource.password}")
+    //@Value("${spring.datasource.password}")
     private String PASSWORD;
 
     private Connection connection;
