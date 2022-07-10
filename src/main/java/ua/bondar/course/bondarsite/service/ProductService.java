@@ -26,7 +26,7 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        return new ProductDecorator(productRepository.findProductById(id), fileService, this);
+        return new ProductDecorator(productRepository.findProductById(id), fileService, this).getProduct();
     }
 
     public List<Product> getAllProduct() {

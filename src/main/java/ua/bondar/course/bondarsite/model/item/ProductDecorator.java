@@ -3,6 +3,7 @@ package ua.bondar.course.bondarsite.model.item;
 import ua.bondar.course.bondarsite.service.FileService;
 import ua.bondar.course.bondarsite.service.ProductService;
 
+import javax.persistence.Entity;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
@@ -104,4 +105,7 @@ public class ProductDecorator extends Product {
         return photoUrl;
     }
 
+    public Product getProduct() {
+        return product;
+    }
 }

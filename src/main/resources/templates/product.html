@@ -62,20 +62,24 @@
                                     from orianz. Pefect for your everyday
                                     use, you could pair it with a stylish pair of jeans or trousers complete the
                                     look.</p>
-                                <form id="addToCart" th:method="POST" th:action="@{/addToCart/{id}(id = ${product.getId()})}">
-                                <div class="sizes mt-5" th:if="${product.getActive()}">
-                                    <h6 class="text-uppercase">Кількість</h6>
-                                    <label class="radio"> <input name="quantity" type="radio" value="1" checked>
-                                        <span>1</span> </label> <label class="radio"> <input type="radio"
-                                                                                             name="quantity" value="2">
-                                    <span>2</span> </label> <label class="radio"> <input type="radio" name="quantity"
-                                                                                         value="3">
-                                    <span>3</span> </label> <label class="radio"> <input type="radio" name="quantity"
-                                                                                         value="4"> <span>4</span>
-                                </label> <label class="radio"> <input type="radio" name="quantity" value="5">
-                                    <span>5</span>
-                                </label>
-                                </div>
+                                <form id="addToCart" th:method="POST"
+                                      th:action="@{/addToCart/{id}(id = ${product.getId()})}">
+                                    <div class="sizes mt-5" th:if="${product.getActive()}">
+                                        <h6 class="text-uppercase">Кількість</h6>
+                                        <label class="radio"> <input name="quantity" type="radio" value="1" checked>
+                                            <span>1</span> </label> <label class="radio"> <input type="radio"
+                                                                                                 name="quantity"
+                                                                                                 value="2">
+                                        <span>2</span> </label> <label class="radio"> <input type="radio"
+                                                                                             name="quantity"
+                                                                                             value="3">
+                                        <span>3</span> </label> <label class="radio"> <input type="radio"
+                                                                                             name="quantity"
+                                                                                             value="4"> <span>4</span>
+                                    </label> <label class="radio"> <input type="radio" name="quantity" value="5">
+                                        <span>5</span>
+                                    </label>
+                                    </div>
                                 </form>
                                 <div th:if="${product.getActive()}" th:object="${product}"
                                      class="cart mt-4 align-items-center">
@@ -191,9 +195,7 @@
                         <div class="modal-body">
                             <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Modal body text goes here.</p>
                             <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Modal body text goes here.</p>
-                            <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Modal body text
-                                goes
-                                here.</p>
+                            <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Modal body text goes here.</p>
                         </div>
                     </div>
                 </div>

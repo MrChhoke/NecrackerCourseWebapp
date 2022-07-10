@@ -14,15 +14,6 @@
             integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <link href="../static/css/style.css" rel="stylesheet"/>
     <link th:replace="fragments/headInfo :: icon">
-    <script>
-        var loadFile = function (event) {
-            var output = document.getElementById('output');
-            output.src = URL.createObjectURL(event.target.files[0]);
-            output.onload = function () {
-                URL.revokeObjectURL(output.src)
-            }
-        };
-    </script>
     <style>
         .admin_adding_table {
             width: 400px;
@@ -46,13 +37,13 @@
                 <div class="card" style="width: 260px; display: flex; justify-content: center">
                     <div style="display: flex; justify-content: center; align-items: center">
                         <div class="boxforparent">
-                            <img class="card-img-top boxforchild" id="output" src="../static/img/defaulIcon.png"
+                            <img class="card-img-top boxforchild" id="imageProduct" src="../static/img/defaulIcon.png"
                                  alt="Card image cap">
                         </div>
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title clip" id="name_card_show">Card title</h5>
-                        <p class="card-text clip" id="the_description">The descrition</p>
+                        <h5 class="card-title clip" id="name_card_show">The card title</h5>
+                        <p class="card-text clip" id="the_description">The description</p>
                     </div>
                     <div class="card-footer" style="display: flex; justify-content: flex-end">
                         <button type="submit" class="btn btn-success">Купить</button>
@@ -61,8 +52,7 @@
             </div>
         </div>
         <div class="admin_adding_table">
-            <form th:method="post" th:action="@{adminpanel}"
-                  style="display: flex; flex-direction: column" class="form" th:object="${formproduct}"
+            <form style="display: flex; flex-direction: column" class="form"  th:object="${formproduct}" id="creationProduct"
                   enctype="multipart/form-data">
                 <div style="display: flex; flex-direction: column;">
                     <div>
@@ -92,7 +82,7 @@
                     </div>
                     <div class="input-group mb-3" style="margin-top: 10px">
                         <label class="input-group-text">Категорія:</label>
-                        <select th:name="category" class="form-select" id="inputGroupSelect01">
+                        <select th:name="category"  class="form-select" id="inputGroupSelect01">
                             <option th:each="productCategory : ${allCategory}" th:text="${productCategory}"></option>
                         </select>
                     </div>
@@ -102,12 +92,12 @@
                                value="upload" accept="image/png, image/jpeg"/>
                     </div>
                     <div style="display: flex; justify-content: center;">
-                        <button th:if="${isFileServiceAccess == null ||  isFileServiceAccess}" class="btn btn-primary" type="submit">Додати</button>
+                        <button th:if="${isFileServiceAccess == null ||  isFileServiceAccess}" class="btn btn-primary"  onclick="validationProduct()" form="fake" >Додати</button>
                         <a th:if="${isFileServiceAccess != null && !isFileServiceAccess}" th:href="@{/sign_in_google}">
                             <button class="btn btn-primary" form="fake" type="submit">Підключитися до диску</button>
                         </a>
                         <div style="padding-left: 20px">
-                            <button th:if="${#fields.hasErrors('name') || #fields.hasErrors('price') || #fields.hasErrors('description')}" type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#dangerModal">
+                            <button id="buttonDanger" style="visibility: hidden" type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#dangerModal">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                      class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
                                     <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"></path>
@@ -115,17 +105,17 @@
                                 </svg>
                             </button>
 
-                            <div th:if="${#fields.hasErrors('name') || #fields.hasErrors('price') || #fields.hasErrors('description')}" class="modal" id="dangerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal" id="dangerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title">Причина відмови</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <div class="modal-body">
-                                            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Modal body text goes here.</p>
+                                        <div class="modal-body" id="changeLog">
+                                            <!--p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Modal body text goes here.</p>
                                             <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Modal body text goes here.</p>
-                                            <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Modal body text goes here.</p>
+                                            <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Modal body text goes here.</p-->
                                         </div>
                                     </div>
                                 </div>
@@ -139,6 +129,7 @@
     </div>
 
 </div>
+<script src="../static/js/validationProduct.js" defer></script>
 <script>
     var inputForName = document.getElementById('name');
     inputForName.oninput = function () {
@@ -156,6 +147,15 @@
             document.getElementById('the_description').innerHTML = "The description";
         } else {
             document.getElementById('the_description').innerHTML = inputForDesc.value;
+        }
+    };
+</script>
+<script>
+    var loadFile = function (event) {
+        var output = document.getElementById('imageProduct');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function () {
+            URL.revokeObjectURL(output.src)
         }
     };
 </script>
