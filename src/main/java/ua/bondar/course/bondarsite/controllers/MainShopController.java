@@ -16,6 +16,7 @@ import ua.bondar.course.bondarsite.service.ProductService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,11 +40,15 @@ public class MainShopController {
                             @RequestParam(value = "search", required = false) String nameProduct) {
 
         List<Product> goodsForModal =
-                nameProduct == null ? new ArrayList<>(productService.getAllProduct()) :
-                                    productService.getAllProduct()
-                                                    .stream()
-                                                    .filter(product -> product.getName().contains(nameProduct))
-                                                    .collect(Collectors.toList());
+                nameProduct == null ? productService.getAllProduct()
+                                            .stream()
+                                            .sorted((Comparator.comparing(Product::getId)))
+                                            .collect(Collectors.toList())  :
+                                      productService.getAllProduct()
+                                            .stream()
+                                            .filter(product -> product.getName().contains(nameProduct))
+                                            .sorted((Comparator.comparing(Product::getId)))
+                                            .collect(Collectors.toList());
         model.addAttribute("products", goodsForModal);
         model.addAttribute("user", user);
         return "index";

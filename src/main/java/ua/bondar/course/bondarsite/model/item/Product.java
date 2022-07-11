@@ -39,7 +39,10 @@ public class Product {
 
     protected Boolean active = true;
 
+    @Transient
+    private String photoUrl;
+
     public String getUrlPhoto() {
-        return null;
+        return photoUrl;
     }
 }

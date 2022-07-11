@@ -57,11 +57,13 @@ public class AdminPanelController {
     @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
     @PutMapping("/adminpanel/{id}")
     public String updateProduct(@AuthenticationPrincipal UserOfShop user,
-                                HttpServletResponse response,
-                                @ModelAttribute("productValid") @Valid Product product, BindingResult bindingResult,Model model,
+                                @ModelAttribute("productValid") @Valid Product product,
                                 @RequestParam(value = "file", required = false) MultipartFile file,
                                 @RequestParam(value = "category", required = false) String category,
-                                @PathVariable(value = "id") Long id) {
+                                @PathVariable(value = "id") Long id,
+                                HttpServletResponse response,
+                                BindingResult bindingResult,
+                                Model model) {
 
         model.addAttribute("user", user);
 
@@ -129,13 +131,9 @@ public class AdminPanelController {
     @PreAuthorize(value = "hasAnyAuthority('ADMIN')")
     public List<ObjectError> createProduct(@AuthenticationPrincipal UserOfShop user,
                                            @ModelAttribute("formproduct") @Valid Product product,
-                                           BindingResult bindingResult, Model model,
+                                           BindingResult bindingResult,
                                            @RequestParam(value = "file", required = false) MultipartFile file,
                                            @RequestParam(value = "category", required = false) String category) {
-        System.out.println("price: "  + product.getPrice());
-        System.out.println("productName: " + product.getName());
-        System.out.println("product desc: " + product.getDescription());
-        System.out.println(bindingResult);
 
 
         if (bindingResult.hasErrors()) {

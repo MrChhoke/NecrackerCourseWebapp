@@ -12,7 +12,6 @@ public class ProductDecorator extends Product {
     private final Product product;
     private final ProductService productService;
     private final FileService fileService;
-    private String photoUrl;
 
     public ProductDecorator(Product product, FileService fileService, ProductService productService){
         this.product = product;
@@ -20,14 +19,14 @@ public class ProductDecorator extends Product {
         this.fileService = fileService;
         if(product.getIdPhoto() == null) {
             product.setIdPhoto(null);
-            photoUrl = "/static/img/defaulIcon.png";
+            product.setPhotoUrl("/static/img/defaulIcon.png");
         }else if(!fileService.isFileExist(product.getIdPhoto())){
             product.setIdPhoto(null);
             productService.updateProduct(product);
-            photoUrl = "/static/img/defaulIcon.png";
+            product.setPhotoUrl("/static/img/defaulIcon.png");
         }
         else{
-            photoUrl = "https://drive.google.com/uc?export=view&id=" + product.getIdPhoto();
+            product.setPhotoUrl("https://drive.google.com/uc?export=view&id=" + product.getIdPhoto());
         }
     }
 
@@ -102,7 +101,7 @@ public class ProductDecorator extends Product {
     }
 
     public String getUrlPhoto() {
-        return photoUrl;
+        return product.getPhotoUrl();
     }
 
     public Product getProduct() {
