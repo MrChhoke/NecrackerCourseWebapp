@@ -17,6 +17,7 @@ import ua.bondar.course.bondarsite.model.item.Product;
 import ua.bondar.course.bondarsite.model.user.UserOfShop;
 import ua.bondar.course.bondarsite.service.FileService;
 import ua.bondar.course.bondarsite.service.ProductService;
+import ua.bondar.course.bondarsite.service.ShoppingCartService;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -33,9 +34,13 @@ public class AdminPanelController {
 
     private final ProductService productService;
     private final FileService fileService;
+    private final ShoppingCartService shoppingCartService;
 
     @Autowired
-    public AdminPanelController(ProductService productService, FileService fileService) {
+    public AdminPanelController(ProductService productService,
+                                ShoppingCartService shoppingCartService,
+                                FileService fileService) {
+        this.shoppingCartService = shoppingCartService;
         this.productService = productService;
         this.fileService = fileService;
     }
@@ -48,6 +53,8 @@ public class AdminPanelController {
         List<String> allCategory = Arrays.stream(CategoryProduct.values())
                                           .map(Enum::name)
                                           .collect(Collectors.toList());
+        model.addAttribute("allListProduct", shoppingCartService.getShoppingCartsByActive(true));
+        model.addAttribute("fullHistoryOrder", shoppingCartService.getFullHistoryOrderHistory());
         model.addAttribute("allCategory", allCategory);
         model.addAttribute("user", user);
         model.addAttribute("isFileServiceAccess", fileService.isFileServiceAccess());

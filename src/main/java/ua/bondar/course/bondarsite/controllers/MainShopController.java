@@ -56,8 +56,8 @@ public class MainShopController {
 
     @GetMapping("/{id}")
     public String product(@AuthenticationPrincipal UserOfShop user,
-                          Model model,
-                          @PathVariable(name = "id") Long id) {
+                          @PathVariable(name = "id") Long id,
+                          Model model) {
         model.addAttribute("product", productService.getProductById(id));
         List<String> allCategory = Arrays.stream(CategoryProduct.values())
                 .map(Enum::name)

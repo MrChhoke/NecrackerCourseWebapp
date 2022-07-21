@@ -26,10 +26,8 @@ public class ProfileController {
     public String profile(@AuthenticationPrincipal UserOfShop user,
                           Model model){
         model.addAttribute("user", user);
-        model.addAttribute("allListProduct", shoppingCartService.getShoppingCartsByActive(true));
         model.addAttribute("historyOrder", shoppingCartService.getHistoryOfUser(user.getUsername()));
-        if(user.getRoles().stream().anyMatch(role -> role == Role.ADMIN))
-            model.addAttribute("fullHistoryOrder", shoppingCartService.getFullHistoryOrderHistory());
+
         return "profile";
     }
 

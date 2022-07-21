@@ -30,105 +30,301 @@
 <div th:replace="~{fragments/navbar :: header}">Header</div>
 
 
-<div class="container" style="margin-top: 35px">
-    <div style="display: flex; justify-content: center; flex-wrap: wrap">
-        <div class="admin_adding_table" style="display: flex; justify-content: center">
-            <div>
-                <div class="card" style="width: 260px; display: flex; justify-content: center">
-                    <div style="display: flex; justify-content: center; align-items: center">
-                        <div class="boxforparent">
-                            <img class="card-img-top boxforchild" id="imageProduct" src="../static/img/defaulIcon.png"
-                                 alt="Card image cap">
+<div sec:authorize="hasAuthority('ADMIN')" style="margin: 10px auto 0 auto; max-width: 99%;
+            overflow: hidden; display: flex; justify-content: center;">
+    <div>
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="display: flex; justify-content: center">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="new-product-tab" data-bs-toggle="pill" data-bs-target="#new-product"
+                        type="button" role="tab" aria-controls="new-product" aria-selected="true">Новий продукт
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="new-orders-tab" data-bs-toggle="pill" data-bs-target="#new-orders"
+                        type="button" role="tab" aria-controls="new-orders" aria-selected="false">Нові замовлення
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="full-history-tab" data-bs-toggle="pill" data-bs-target="#fullHistory"
+                        type="button" role="tab" aria-controls="fullHistory" aria-selected="false">Виконані замовлення
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="new-product" role="tabpanel" aria-labelledby="new-product-tab">
+                <div class="container_content">
+                    <div style="display: flex; justify-content: center; flex-wrap: wrap">
+                        <div class="admin_adding_table" style="display: flex; justify-content: center">
+                            <div>
+                                <div class="card" style="width: 260px; display: flex; justify-content: center">
+                                    <div style="display: flex; justify-content: center; align-items: center">
+                                        <div class="boxforparent">
+                                            <img class="card-img-top boxforchild" id="imageProduct"
+                                                 src="../static/img/defaulIcon.png"
+                                                 alt="Card image cap">
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title clip" id="name_card_show">The card title</h5>
+                                        <p class="card-text clip" id="the_description">The description</p>
+                                    </div>
+                                    <div class="card-footer" style="display: flex; justify-content: flex-end">
+                                        <button type="submit" class="btn btn-success">Купить</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title clip" id="name_card_show">The card title</h5>
-                        <p class="card-text clip" id="the_description">The description</p>
-                    </div>
-                    <div class="card-footer" style="display: flex; justify-content: flex-end">
-                        <button type="submit" class="btn btn-success">Купить</button>
+                        <div class="admin_adding_table">
+                            <form style="display: flex; flex-direction: column" class="form" th:object="${formproduct}"
+                                  id="creationProduct"
+                                  enctype="multipart/form-data">
+                                <div style="display: flex; flex-direction: column;">
+                                    <div>
+                                        <div class="input-group has-validation">
+                                            <span class="input-group-text">Назва товару:</span>
+                                            <input placeholder="Ім'я товару" th:field="*{name}" id="name" type="text"
+                                                   class="form-control"
+                                                   aria-label="Name of product">
+                                            <span class="input-group-text">UTF-8</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="admin_addin_table_block">
+                                        <div class="input-group">
+                                            <span class="input-group-text">Ціна товару:</span>
+                                            <input placeholder="Ціна товару" th:field="*{price}" id="price" type="text"
+                                                   class="form-control"
+                                                   aria-label="Dollar amount (with dot and two decimal places)">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="input-group admin_addin_table_block">
+                                        <span class="input-group-text">Опис:</span>
+                                        <textarea placeholder="Опис товару має бути тут" th:field="*{description}"
+                                                  id="desc"
+                                                  class="form-control" aria-label="With textarea"></textarea>
+                                    </div>
+                                    <div class="input-group mb-3" style="margin-top: 10px">
+                                        <label class="input-group-text">Категорія:</label>
+                                        <select th:name="category" class="form-select" id="inputGroupSelect01">
+                                            <option th:each="productCategory : ${allCategory}"
+                                                    th:text="${productCategory}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="image">Фото: </label>
+                                        <input onchange="loadFile(event)" class="form-control" type="file" name="file"
+                                               id="image"
+                                               value="upload" accept="image/png, image/jpeg"/>
+                                    </div>
+                                    <div style="display: flex; justify-content: center;">
+                                        <button th:if="${isFileServiceAccess == null ||  isFileServiceAccess}"
+                                                class="btn btn-primary" onclick="validationProduct()" form="fake">Додати
+                                        </button>
+                                        <a th:if="${isFileServiceAccess != null && !isFileServiceAccess}"
+                                           th:href="@{/sign_in_google}">
+                                            <button class="btn btn-primary" form="fake" type="submit">Підключитися до
+                                                диску
+                                            </button>
+                                        </a>
+                                        <div style="padding-left: 20px">
+                                            <button id="buttonDanger" style="visibility: hidden" type="button"
+                                                    class="btn btn-danger" data-bs-toggle="modal"
+                                                    data-bs-target="#dangerModal">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                     fill="currentColor"
+                                                     class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
+                                                    <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"></path>
+                                                    <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995z"></path>
+                                                </svg>
+                                            </button>
+
+                                            <div class="modal" id="dangerModal" tabindex="-1"
+                                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Причина відмови</h5>
+                                                            <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body" id="changeLog">
+                                                            <!--p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Modal body text goes here.</p>
+                                                            <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Modal body text goes here.</p>
+                                                            <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Modal body text goes here.</p-->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="admin_adding_table">
-            <form style="display: flex; flex-direction: column" class="form"  th:object="${formproduct}" id="creationProduct"
-                  enctype="multipart/form-data">
-                <div style="display: flex; flex-direction: column;">
-                    <div>
-                        <div class="input-group has-validation">
-                            <span class="input-group-text">Назва товару:</span>
-                            <input placeholder="Ім'я товару" th:field="*{name}" id="name" type="text"
-                                   class="form-control"
-                                   aria-label="Name of product">
-                            <span class="input-group-text">UTF-8</span>
-                        </div>
-                    </div>
 
-                    <div class="admin_addin_table_block">
-                        <div class="input-group">
-                            <span class="input-group-text">Ціна товару:</span>
-                            <input placeholder="Ціна товару" th:field="*{price}" id="price" type="text"
-                                   class="form-control"
-                                   aria-label="Dollar amount (with dot and two decimal places)">
-                            <span class="input-group-text">$</span>
-                        </div>
-                    </div>
-
-                    <div class="input-group admin_addin_table_block">
-                        <span class="input-group-text">Опис:</span>
-                        <textarea placeholder="Опис товару має бути тут" th:field="*{description}" id="desc"
-                                  class="form-control" aria-label="With textarea"></textarea>
-                    </div>
-                    <div class="input-group mb-3" style="margin-top: 10px">
-                        <label class="input-group-text">Категорія:</label>
-                        <select th:name="category"  class="form-select" id="inputGroupSelect01">
-                            <option th:each="productCategory : ${allCategory}" th:text="${productCategory}"></option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="image">Фото: </label>
-                        <input onchange="loadFile(event)" class="form-control" type="file" name="file" id="image"
-                               value="upload" accept="image/png, image/jpeg"/>
-                    </div>
-                    <div style="display: flex; justify-content: center;">
-                        <button th:if="${isFileServiceAccess == null ||  isFileServiceAccess}" class="btn btn-primary"  onclick="validationProduct()" form="fake" >Додати</button>
-                        <a th:if="${isFileServiceAccess != null && !isFileServiceAccess}" th:href="@{/sign_in_google}">
-                            <button class="btn btn-primary" form="fake" type="submit">Підключитися до диску</button>
-                        </a>
-                        <div style="padding-left: 20px">
-                            <button id="buttonDanger" style="visibility: hidden" type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#dangerModal">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
-                                    <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"></path>
-                                    <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995z"></path>
-                                </svg>
-                            </button>
-
-                            <div class="modal" id="dangerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Причина відмови</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="tab-pane fade" id="new-orders" role="tabpanel" aria-labelledby="new-orders-tab">
+                <div class="container_content">
+                    <div th:if="${allListProduct.size() > 0}" class="page" th:each="listProduct : ${allListProduct}">
+                        <section class="shopping-cart dark">
+                            <div class="container">
+                                <div class="content">
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-8">
+                                            <div class="items">
+                                                <div class="product" th:each="cartItem : ${listProduct.getItems()}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 block-photo">
+                                                            <img class="img-fluid mx-auto d-block image"
+                                                                 th:src="${cartItem.getProduct().getUrlPhoto()}">
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="info">
+                                                                <div class="row">
+                                                                    <div class="col-md-5 product-name">
+                                                                        <div class="product-name">
+                                                                            <a th:href="@{/{id}(id=${cartItem.getProduct().getId()})}"
+                                                                               th:text="${cartItem.getProduct().getName()}">Lorem
+                                                                                Ipsum dolor</a>
+                                                                            <div class="product-info"
+                                                                                 th:text="${cartItem.getProduct().getDescription()}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4 quantity">
+                                                                        <label for="quantity">Кількість:</label>
+                                                                        <input type="number"
+                                                                               th:value="${cartItem.getAmount()}"
+                                                                               class="form-control quantity-input"
+                                                                               disabled>
+                                                                    </div>
+                                                                    <div class="col-md-3 price">
+                                                                        <span th:text="'$' + ${cartItem.getAmount() * cartItem.getProduct().getPrice()}">$120</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="modal-body" id="changeLog">
-                                            <!--p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Modal body text goes here.</p>
-                                            <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Modal body text goes here.</p>
-                                            <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Modal body text goes here.</p-->
+                                        <div class="col-md-12 col-lg-4">
+                                            <div class="summary">
+                                                <h3>Замовлення клієнта</h3>
+                                                <div class="summary-item"><span class="text">Місце доставки</span><span
+                                                        class="price" th:text="${listProduct.getLocation()}"></span>
+                                                </div>
+                                                <div class="summary-item"><span class="text">Дата</span><span
+                                                        class="price" th:text="${listProduct.getDate()}"></span></div>
+                                                <div class="summary-item"><span class="text">Ціна</span><span
+                                                        class="price" th:text="${listProduct.getTotalPrice()}">$0</span>
+                                                </div>
+                                                <div th:if="${listProduct.getBuyerName() != null}" class="summary-item">
+                                                    <span class="text">Замовник</span><span
+                                                        class="price" th:text="${listProduct.getBuyerName()}">$0</span>
+                                                </div>
+                                                <form th:if="${user != null}"
+                                                      th:action="@{/profile/doneOrder/{id}(id = ${listProduct.getId()}) }"
+                                                      th:method="DELETE">
+                                                    <button type="submit" class="btn btn-success btn-lg btn-block">
+                                                        Виконати
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                        </div>
+                        </section>
                     </div>
                 </div>
-            </form>
+                <div th:if="${allListProduct.size() == 0}" class="container_content" style="margin-top: 50px; justify-content: center; align-items: center;">
+                    <h1 style="font-size: 50px">Нові замовлень відсутні!</h1>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="fullHistory" role="tabpanel" aria-labelledby="full-history-tab">
+                <div class="container_content">
+                    <div th:if="${fullHistoryOrder.size() >  0}" class="page"
+                         th:each="listProduct : ${fullHistoryOrder}">
+                        <section class="shopping-cart dark">
+                            <div class="container">
+                                <div class="content">
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-8">
+                                            <div class="items">
+                                                <div class="product" th:each="cartItem : ${listProduct.getItems()}">
+                                                    <div class="row">
+                                                        <div class="col-md-3 block-photo">
+                                                            <img class="img-fluid mx-auto d-block image"
+                                                                 th:src="${cartItem.getProduct().getUrlPhoto()}">
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="info">
+                                                                <div class="row">
+                                                                    <div class="col-md-5 product-name">
+                                                                        <div class="product-name">
+                                                                            <a th:href="@{/{id}(id=${cartItem.getProduct().getId()})}"
+                                                                               th:text="${cartItem.getProduct().getName()}">Lorem
+                                                                                Ipsum dolor</a>
+                                                                            <div class="product-info"
+                                                                                 th:text="${cartItem.getProduct().getDescription()}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4 quantity">
+                                                                        <label>Кількість:</label>
+                                                                        <input type="number"
+                                                                               th:value="${cartItem.getAmount()}"
+                                                                               class="form-control quantity-input"
+                                                                               disabled>
+                                                                    </div>
+                                                                    <div class="col-md-3 price">
+                                                                        <span th:text="'$' + ${cartItem.getAmount() * cartItem.getProduct().getPrice()}">$120</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-lg-4">
+                                            <div class="summary">
+                                                <h3>Замовлення клієнта</h3>
+                                                <div class="summary-item"><span class="text">Місце доставки</span><span
+                                                        class="price" th:text="${listProduct.getLocation()}"></span>
+                                                </div>
+                                                <div class="summary-item"><span class="text">Дата</span><span
+                                                        class="price" th:text="${listProduct.getDate()}"></span></div>
+                                                <div class="summary-item"><span class="text">Ціна</span><span
+                                                        class="price" th:text="${listProduct.getTotalPrice()}">$0</span>
+                                                </div>
+                                                <div th:if="${listProduct.getBuyerName() != null}" class="summary-item">
+                                                    <span class="text">Замовник</span><span
+                                                        class="price" th:text="${listProduct.getBuyerName()}">$0</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <div th:if="${fullHistoryOrder.size() == 0}" class="container_content"
+                     style="margin-top: 50px; justify-content: center; align-items: center;">
+                    <h1 style="font-size: 50px">Виконані замовлень відсутня!</h1>
+                </div>
+            </div>
         </div>
     </div>
-
 </div>
+
+
 <script src="../static/js/validationProduct.js" defer></script>
 <script>
     var inputForName = document.getElementById('name');
