@@ -8,9 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import ua.bondar.course.bondarsite.model.user.Role;
 import ua.bondar.course.bondarsite.model.user.UserOfShop;
 import ua.bondar.course.bondarsite.service.ShoppingCartService;
+import ua.bondar.course.bondarsite.service.impl.ShoppingCartServiceImpl;
 
 @Controller
 public class ProfileController {

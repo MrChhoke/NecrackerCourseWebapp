@@ -8,13 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.bondar.course.bondarsite.model.item.CategoryProduct;
 import ua.bondar.course.bondarsite.model.item.Product;
-import ua.bondar.course.bondarsite.model.item.ProductDecorator;
 import ua.bondar.course.bondarsite.model.user.UserOfShop;
 import ua.bondar.course.bondarsite.service.FileService;
 import ua.bondar.course.bondarsite.service.ProductService;
 
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;

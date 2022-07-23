@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ua.bondar.course.bondarsite.model.item.ShoppingCart;
 import ua.bondar.course.bondarsite.model.user.UserOfShop;
 import ua.bondar.course.bondarsite.service.ShoppingCartService;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.UUID;

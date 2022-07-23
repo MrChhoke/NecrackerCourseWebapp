@@ -2,9 +2,6 @@ package ua.bondar.course.bondarsite.model.item;
 
 
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import ua.bondar.course.bondarsite.model.item.CategoryProduct;
-import ua.bondar.course.bondarsite.service.FileService;
 
 import javax.persistence.*;
 

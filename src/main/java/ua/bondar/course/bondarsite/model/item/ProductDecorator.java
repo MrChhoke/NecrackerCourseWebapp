@@ -1,28 +1,27 @@
 package ua.bondar.course.bondarsite.model.item;
 
-import ua.bondar.course.bondarsite.service.FileService;
-import ua.bondar.course.bondarsite.service.ProductService;
+import ua.bondar.course.bondarsite.service.impl.FileServiceGoogle;
+import ua.bondar.course.bondarsite.service.impl.ProductServiceImpl;
 
-import javax.persistence.Entity;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 public class ProductDecorator extends Product {
 
     private final Product product;
-    private final ProductService productService;
-    private final FileService fileService;
+    private final ProductServiceImpl productServiceImpl;
+    private final FileServiceGoogle fileServiceGoogle;
 
-    public ProductDecorator(Product product, FileService fileService, ProductService productService){
+    public ProductDecorator(Product product, FileServiceGoogle fileServiceGoogle, ProductServiceImpl productServiceImpl){
         this.product = product;
-        this.productService = productService;
-        this.fileService = fileService;
+        this.productServiceImpl = productServiceImpl;
+        this.fileServiceGoogle = fileServiceGoogle;
         if(product.getIdPhoto() == null) {
             product.setIdPhoto(null);
             product.setPhotoUrl("/static/img/defaulIcon.png");
-        }else if(!fileService.isFileExist(product.getIdPhoto())){
+        }else if(!fileServiceGoogle.isFileExist(product.getIdPhoto())){
             product.setIdPhoto(null);
-            productService.updateProduct(product);
+            productServiceImpl.updateProduct(product);
             product.setPhotoUrl("/static/img/defaulIcon.png");
         }
         else{
